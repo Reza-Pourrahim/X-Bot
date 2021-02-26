@@ -37,6 +37,7 @@ class LORE(object):
         self.numeric_columns = numeric_columns
         self.features_map = features_map
         self.neigh_type = neigh_type
+        self.samples = samples
         self.multi_label = multi_label
         self.one_vs_rest = one_vs_rest
         self.filter_crules = self.blackbox.predict if filter_crules else None
@@ -60,7 +61,7 @@ class LORE(object):
         self.__init_neighborhood__()
 
     def __init_neighborhood__(self):
-        neighgen_gn = LoreNeighborhoodGenerator(self.blackbox, self.neigh_type, self.verbose)
+        neighgen_gn = LoreNeighborhoodGenerator(self.blackbox, self.neigh_type, self.samples, self.verbose)
         self.neighgen_fn = neighgen_gn.generate_fn
 
 

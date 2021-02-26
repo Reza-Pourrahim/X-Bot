@@ -2,11 +2,11 @@ import numpy as np
 
 class LoreNeighborhoodGenerator(object):
 
-    def __init__(self, blackbox, neigh_type, sample=1000, verbose=False):
+    def __init__(self, blackbox, neigh_type, sample, verbose=False):
         self.blackbox = blackbox
         self.neigh_type = neigh_type
-        self.verbose = verbose
         self.sample = sample
+        self.verbose = verbose
 
 
     def vicinity_sampling(self, z, n=1000, threshold=None, kind="gaussian_matched", distribution=None,
@@ -104,10 +104,15 @@ class LoreNeighborhoodGenerator(object):
             X[..., axis] += center[..., axis]
 
 
+
+
     def binary_sampling_search(self, z, z_label, blackbox, lower_threshold=0, upper_threshold=4, n=10000, n_batch=1000,
                                stopping_ratio=0.01, kind="gaussian_matched", vicinity_sampler_kwargs=dict(),
                                check_upper_threshold=True, final_counterfactual_search=True, downward_only=True,
                                **kwargs):
+        """ To find closest counterfactuals and
+                smallest and latest working threshold(epsilon)"""
+
         if self.verbose:
             print("Binary sampling search:")
 
@@ -140,6 +145,8 @@ class LoreNeighborhoodGenerator(object):
                 if not np.all(y == z_label):  # if we found already some counterfactuals
                     counterfactuals_idxs = np.argwhere(y != z_label).ravel()
                     Z_counterfactuals.append(Z[counterfactuals_idxs])
+                    """ latest_working_threshold is the smallest and the latest threshold that we've found
+                     some counterfactuals in it """
                     latest_working_threshold = threshold
                     upper_threshold = threshold
                     change_lower = False
@@ -163,6 +170,8 @@ class LoreNeighborhoodGenerator(object):
     def generate_fn(self, x, sample=1000, nbr_runs=10):
         y_val = self.blackbox.predict(x.reshape(1, -1))[0]
 
+        # cf: closest_counterfactual
+        # bt: latest_working_threshold
         if self.neigh_type == 'gmgm':
             cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
             Z = self.vicinity_sampling(z=cf, n=sample, threshold=bt, kind="gaussian_matched")
