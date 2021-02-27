@@ -102,9 +102,9 @@ print('Z is:', Z)
 # In[50]:
 
 
-# explanation = lore_obj.explain_instance(x, y_val, blackbox, nbr_runs=10, verbose=True)
-#
-# print(explanation)
+explanation = lore_obj.explain_instance(x, y_val, blackbox, nbr_runs=10, verbose=True)
+
+print(explanation)
 
 
 
