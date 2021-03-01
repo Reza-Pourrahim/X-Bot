@@ -66,11 +66,11 @@ class LORE(object):
 
 
 
-    def explain_instance(self, x, y_val, blackbox, samples=1000, use_weights=True, metric=neuclidean,nbr_runs=10,
+    def explain_instance(self, x, samples=1000, use_weights=True, metric=neuclidean,nbr_runs=10,
                          verbose=False):
 
         if isinstance(samples, int):
-            if self.verbose:
+            if verbose:
                 print('generating neighborhood - %s' % self.neigh_type)
             Z = self.neighgen_fn(x, samples, nbr_runs)
         else:
@@ -81,7 +81,7 @@ class LORE(object):
             Z = np.array([z for z, y in zip(Z, Yb) if np.sum(y) > 0])
             Yb = self.blackbox.predict(Z)
 
-        if self.verbose:
+        if verbose:
             if not self.multi_label:
                 neigh_class, neigh_counts = np.unique(Yb, return_counts=True)
                 neigh_class_counts = {self.class_values[k]: v for k, v in zip(neigh_class, neigh_counts)}
