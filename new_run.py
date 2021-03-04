@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[57]:
 
 
 import lore
@@ -21,7 +21,7 @@ from util import record2str
 
 # ## Dataset
 
-# In[2]:
+# In[66]:
 
 
 ## Iris Dataset
@@ -52,7 +52,7 @@ class_name = dataset[1]
 dataset_fin = prepare_dataset(dataframe, class_name)
 
 
-# In[3]:
+# In[67]:
 
 
 df = dataset_fin[0] #dataframe with unique numeric class values(0, 1, ...)
@@ -64,13 +64,13 @@ real_feature_names = dataset_fin[5]
 features_map = dataset_fin[6] #map each class name to its unique numeric value
 
 
-# In[4]:
+# In[68]:
 
 
 rdf.head()
 
 
-# In[5]:
+# In[69]:
 
 
 df.head()
@@ -78,7 +78,7 @@ df.head()
 
 # ## Black box classifier
 
-# In[6]:
+# In[70]:
 
 
 X = df.loc[:, df.columns != class_name].values
@@ -89,7 +89,7 @@ blackbox = RandomForestClassifier()
 blackbox.fit(X_train, y_train)
 
 
-# In[7]:
+# In[71]:
 
 
 y_pred = blackbox.predict(X_test)
@@ -98,56 +98,138 @@ print('Accuracy: %.3f' % accuracy_score(y_test, y_pred))
 
 # ## select an instance _x_
 
-# In[8]:
+# In[72]:
 
 
 i = 10
 x = X_test[i]
 y_val = blackbox.predict(x.reshape(1,-1))[0]
 
+print(class_values)
+class_prob = blackbox.predict_proba(x.reshape(1,-1))[0]
+print(class_prob)
+
 y_val_name = class_values[y_val]
 print('blackbox(x) = { %s }' % y_val_name)
 
 
-# In[9]:
+# In[73]:
 
 
 print('x = %s' % record2str(x, feature_names, numeric_columns))
 
 
-# # LORE explainer
+# # LORE explainer (explaining an instance x)
 
-# In[10]:
+# In[78]:
 
 
 lore_obj = lore.LORE(X_test, blackbox, feature_names, class_name, class_values,
-                 numeric_columns, features_map, neigh_type='ngmusx', verbose=False)
+                 numeric_columns, features_map, neigh_type='ngmusx', multi_label=False , verbose=False)
 
 
-# In[11]:
+# In[79]:
 
 
 # just to check
-Z = lore_obj.neighgen_fn(x)
+Z = lore_obj.neighgen_fn(x, upper_threshold=4)
 print('Z is:',Z)
 Z.shape
 
 
-# In[12]:
+# In[80]:
 
 
-explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10, verbose=True)
+explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10, upper_threshold=32)
 
 print(explanation)
 
 
-# In[13]:
+# In[81]:
+
+
+explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10, upper_threshold=4)
+
+print(explanation)
+
+
+# In[82]:
 
 
 print('x = %s' % record2str(x, feature_names, numeric_columns))
 
 
-# In[13]:
+# ## check the borderline
+
+# In[85]:
+
+
+temp_x = x.copy()
+
+
+# In[86]:
+
+
+features_map
+
+
+# In[87]:
+
+
+#c = { { age <= 25.50 } }
+temp_x[0] = 25
+print('x = %s' % record2str(temp_x, feature_names, numeric_columns))
+
+
+# In[89]:
+
+
+print(class_values)
+print(blackbox.predict_proba(temp_x.reshape(1,-1))[0])
+print(class_values[blackbox.predict(temp_x.reshape(1,-1))[0]])
+
+
+# In[91]:
+
+
+explanation_temp = lore_obj.explain_instance(temp_x, samples=1000, nbr_runs=10)
+
+print(explanation_temp)
+
+
+# In[92]:
+
+
+#c = { { race != Caucasian } }
+temp_x = x.copy()
+temp_x[14] = 0
+temp_x[13] = 1
+print('x = %s' % record2str(temp_x, feature_names, numeric_columns))
+
+
+# In[93]:
+
+
+print(class_values)
+print(blackbox.predict_proba(temp_x.reshape(1,-1))[0])
+print(class_values[blackbox.predict(temp_x.reshape(1,-1))[0]])
+
+
+# In[98]:
+
+
+explanation_temp2 = lore_obj.explain_instance(temp_x, samples=1000, nbr_runs=10, upper_threshold=4)
+
+print(explanation_temp2)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
 
 
 

@@ -66,11 +66,10 @@ class LORE(object):
 
 
 
-    def explain_instance(self, x, samples=1000, use_weights=True, metric=neuclidean,nbr_runs=10,
-                         verbose=False):
+    def explain_instance(self, x, samples=1000, use_weights=True, metric=neuclidean, nbr_runs=10):
 
         if isinstance(samples, int):
-            if verbose:
+            if self.verbose:
                 print('generating neighborhood - %s' % self.neigh_type)
             Z = self.neighgen_fn(x, samples, nbr_runs)
         else:
@@ -81,7 +80,7 @@ class LORE(object):
             Z = np.array([z for z, y in zip(Z, Yb) if np.sum(y) > 0])
             Yb = self.blackbox.predict(Z)
 
-        if verbose:
+        if self.verbose:
             if not self.multi_label:
                 neigh_class, neigh_counts = np.unique(Yb, return_counts=True)
                 neigh_class_counts = {self.class_values[k]: v for k, v in zip(neigh_class, neigh_counts)}
@@ -120,6 +119,7 @@ class LORE(object):
                                        prune_tree=False)
         Yc = dt.predict(Z)
 
+        # Return the mean accuracy on the given test data and labels.
         fidelity = dt.score(Z, Yb, sample_weight=weights)
 
         if self.verbose:

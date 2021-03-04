@@ -101,7 +101,7 @@ def prepare_wine_dataset(filename):
     df = pd.read_csv(filename, skipinitialspace=True, sep=',')
     return df, class_name
 
-
+'''Predict whether income exceeds $50K/yr based on census data.'''
 def prepare_adult_dataset(filename):
     class_name = 'class'
     df = pd.read_csv(filename, skipinitialspace=True, na_values='?', keep_default_na=True)
@@ -109,14 +109,17 @@ def prepare_adult_dataset(filename):
     df.drop(columns2remove, inplace=True, axis=1)
     return df, class_name
 
-
+'''This dataset classifies people described by a set of attributes as good(0) or bad credit(1) risks.'''
 def prepare_german_dataset(filename):
     class_name = 'default'
     df = pd.read_csv(filename, skipinitialspace=True)
     df.columns = [c.replace('=', '') for c in df.columns]
     return df, class_name
 
-
+'''COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) is a popular commercial algorithm 
+used by judges and parole officers for scoring criminal defendant’s likelihood of reoffending (recidivism). 
+It has been shown that the algorithm is biased in favor of white defendants, and against black inmates, 
+based on a 2 year follow up study'''
 def prepare_compass_dataset(filename, binary=False):
 
     df = pd.read_csv(filename, delimiter=',', skipinitialspace=True)

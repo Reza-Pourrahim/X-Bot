@@ -125,7 +125,7 @@ def get_rule(x, dt, feature_names, class_name, class_values, numeric_columns, mu
     feature = dt.tree_.feature
     threshold = dt.tree_.threshold
 
-    leave_id = dt.apply(x)
+    leave_id = dt.apply(x) # Return the index of the leaf that each sample is predicted as.
     node_index = dt.decision_path(x).indices
 
     premises = list()
