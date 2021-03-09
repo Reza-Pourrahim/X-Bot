@@ -25,19 +25,6 @@ def record2str(x, feature_names, numeric_columns):
     return s
 
 
-def multilabel2str(y, class_name):
-    mstr = ', '.join([class_name[i] for i in range(len(y)) if y[i] == 1.0])
-    return mstr
-
-
-def multi_dt_predict(X, dt_list):
-    nbr_labels = len(dt_list)
-    Y = np.zeros((X.shape[0], nbr_labels))
-    for l in range(nbr_labels):
-        Y[:, l] = dt_list[l].predict(X)
-    return Y
-
-
 def calculate_feature_values(X, numeric_columns_index, categorical_use_prob=False, continuous_fun_estimation=False,
                              size=1000):
 
@@ -172,45 +159,6 @@ def best_fit_distribution(data, bins=200, ax=None):
 
     return best_distribution.name, best_params
 
-
-# def amp2math(c):
-#     if '&le;' in c:
-#         idx = c.find('&le;')
-#         cnew = '%s%s%s' % (c[:idx], '<=', c[idx + 4:])
-#         return cnew
-#     elif '&lt;' in c:
-#         idx = c.find('&lt;')
-#         cnew = '%s%s%s' % (c[:idx], '<', c[idx + 4:])
-#         return cnew
-#     elif '&gl;' in c:
-#         idx = c.find('&gl;')
-#         cnew = '%s%s%s' % (c[:idx], '>=', c[idx + 4:])
-#         return cnew
-#     elif '&gt;' in c:
-#         idx = c.find('&gt;')
-#         cnew = '%s%s%s' % (c[:idx], '>', c[idx + 4:])
-#         return cnew
-#     return c
-#
-#
-# def math2amp(c):
-#     if '<=' in c:
-#         idx = c.find('<=')
-#         cnew = '%s%s%s' % (c[:idx], '&le;', c[idx + 2:])
-#         return cnew
-#     elif '<' in c:
-#         idx = c.find('<')
-#         cnew = '%s%s%s' % (c[:idx], '&lt;', c[idx + 1:])
-#         return cnew
-#     elif '>=' in c:
-#         idx = c.find('>=')
-#         cnew = '%s%s%s' % (c[:idx], '&gl;', c[idx + 2:])
-#         return cnew
-#     elif '>' in c:
-#         idx = c.find('>')
-#         cnew = '%s%s%s' % (c[:idx], '&gt;', c[idx + 1:])
-#         return cnew
-#     return c
 
 
 def sigmoid(x, x0=0.5, k=10.0, L=1.0):

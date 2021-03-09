@@ -77,13 +77,6 @@ def json2explanation(obj):
     return exp
 
 
-class MultilabelExplanation(Explanation):
-    def __init__(self):
-        super(MultilabelExplanation).__init__()
-        self.dt_list = None
-        self.rule_list = None
-        self.crules_list = None
-        self.deltas_list = None
 
 
 class ImageExplanation(Explanation):

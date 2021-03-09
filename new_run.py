@@ -7,7 +7,6 @@
 import lore
 from datamanager import *
 
-from sklearn.datasets import load_iris, load_breast_cancer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
@@ -125,14 +124,14 @@ print('x = %s' % record2str(x, feature_names, numeric_columns))
 
 
 lore_obj = lore.LORE(X_test, blackbox, feature_names, class_name, class_values,
-                 numeric_columns, features_map, neigh_type='ngmusx', multi_label=False , verbose=False)
+                 numeric_columns, features_map, neigh_type='ngmusx', verbose=False)
 
 
 # In[79]:
 
 
 # just to check
-Z = lore_obj.neighgen_fn(x, upper_threshold=4)
+Z = lore_obj.neighgen_fn(x)
 print('Z is:',Z)
 Z.shape
 
@@ -140,7 +139,7 @@ Z.shape
 # In[80]:
 
 
-explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10, upper_threshold=32)
+explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10)
 
 print(explanation)
 
@@ -148,7 +147,7 @@ print(explanation)
 # In[81]:
 
 
-explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10, upper_threshold=4)
+explanation = lore_obj.explain_instance(x, samples=1000, nbr_runs=10)
 
 print(explanation)
 
@@ -157,80 +156,6 @@ print(explanation)
 
 
 print('x = %s' % record2str(x, feature_names, numeric_columns))
-
-
-# ## check the borderline
-
-# In[85]:
-
-
-temp_x = x.copy()
-
-
-# In[86]:
-
-
-features_map
-
-
-# In[87]:
-
-
-#c = { { age <= 25.50 } }
-temp_x[0] = 25
-print('x = %s' % record2str(temp_x, feature_names, numeric_columns))
-
-
-# In[89]:
-
-
-print(class_values)
-print(blackbox.predict_proba(temp_x.reshape(1,-1))[0])
-print(class_values[blackbox.predict(temp_x.reshape(1,-1))[0]])
-
-
-# In[91]:
-
-
-explanation_temp = lore_obj.explain_instance(temp_x, samples=1000, nbr_runs=10)
-
-print(explanation_temp)
-
-
-# In[92]:
-
-
-#c = { { race != Caucasian } }
-temp_x = x.copy()
-temp_x[14] = 0
-temp_x[13] = 1
-print('x = %s' % record2str(temp_x, feature_names, numeric_columns))
-
-
-# In[93]:
-
-
-print(class_values)
-print(blackbox.predict_proba(temp_x.reshape(1,-1))[0])
-print(class_values[blackbox.predict(temp_x.reshape(1,-1))[0]])
-
-
-# In[98]:
-
-
-explanation_temp2 = lore_obj.explain_instance(temp_x, samples=1000, nbr_runs=10, upper_threshold=4)
-
-print(explanation_temp2)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
 
 
 

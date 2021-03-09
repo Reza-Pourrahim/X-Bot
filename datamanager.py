@@ -11,7 +11,9 @@ def prepare_dataset(df, class_name):
 
     df = remove_missing_values(df)
 
-    numeric_columns = get_numeric_columns(df)
+    numeric_columns = get_numeric_columns(df, class_name)
+    # real_categorical_columns = get_real_categorical_columns(df, class_name)
+    # real_categorical_idx = get_real_categorical_idx(df, real_categorical_columns)
 
     rdf = df
 
@@ -22,8 +24,10 @@ def prepare_dataset(df, class_name):
     rdf = rdf[real_feature_names + (class_values if isinstance(class_name, list) else [class_name])]
 
     features_map = get_features_map(feature_names, real_feature_names)
+    df_categorical_idx = get_categorical_idx(numeric_columns, features_map)
 
-    return df, feature_names, class_values, numeric_columns, rdf, real_feature_names, features_map
+    return df, feature_names, class_values, numeric_columns, rdf, real_feature_names, features_map,\
+           df_categorical_idx
 
 
 def get_features_map(feature_names, real_feature_names):
@@ -85,9 +89,52 @@ def remove_missing_values(df):
     return df
 
 
-def get_numeric_columns(df):
+def get_numeric_columns(df, class_name):
     numeric_columns = list(df._get_numeric_data().columns)
+    if class_name in numeric_columns:
+        numeric_columns.remove(class_name)
     return numeric_columns
+
+# def get_real_categorical_columns(df, class_name):
+#     numeric_columns = df._get_numeric_data().columns
+#     cols = df.columns
+#     categorical_columns = list(set(cols) - set(numeric_columns))
+#     if class_name in categorical_columns:
+#         categorical_columns.remove(class_name)
+#     return categorical_columns
+
+# def get_real_categorical_idx(df, real_categorical_columns):
+#     idx = []
+#     for c in real_categorical_columns:
+#         idx.append(df.columns.get_loc(c))
+#     # idx = [df.columns.get_loc(c) for c in real_categorical_columns]
+#     return idx
+
+# def get_categorical_idx(df, rdf, features_map, class_name):
+#     rdf_numeric_columns = rdf._get_numeric_data().columns
+#     df_cols = df.columns
+#     df_categorical_columns = list(set(df_cols) - set(rdf_numeric_columns))
+#     if class_name in df_categorical_columns:
+#         df_categorical_columns.remove(class_name)
+#     df_cat_idx = [df.columns.get_loc(c) for c in df_categorical_columns]
+#
+#     categorical_idx = []
+#     for item in range(len(df_cat_idx)):
+#         categorical_idx.append([features_map.get(c) for c in df_cat_idx][item].values())
+
+    # return categorical_idx
+
+def get_categorical_idx(numeric_columns, features_map):
+    cat_id_dict = defaultdict(list)
+    for key, val in features_map.items():
+        for k, v in val.items():
+            if k not in numeric_columns:
+                if key in cat_id_dict.keys():
+                    cat_id_dict[key].append(v)
+                else:
+                    cat_id_dict[key].append(v)
+
+    return list(cat_id_dict.values())
 
 
 def prepare_iris_dataset(filename):

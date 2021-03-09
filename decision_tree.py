@@ -5,8 +5,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.tree._tree import TREE_LEAF
 
 
-def learn_local_decision_tree(Z, Yb, weights, class_values, multi_label=False, one_vs_rest=False, cv=5,
-                              prune_tree=False):
+def learn_local_decision_tree(Z, Yb, weights, class_values, cv=5, prune_tree=False):
     dt = DecisionTreeClassifier()
     if prune_tree:
         param_list = {'min_samples_split': [0.002, 0.01, 0.05, 0.1, 0.2],
@@ -14,13 +13,11 @@ def learn_local_decision_tree(Z, Yb, weights, class_values, multi_label=False, o
                       'max_depth': [None, 2, 4, 6, 8, 10, 12, 16]
                       }
 
-        if not multi_label or (multi_label and one_vs_rest):
-            if len(class_values) == 2 or (multi_label and one_vs_rest):
-                scoring = 'f1'
-            else:
-                scoring = 'f1_macro'
+        if len(class_values) == 2:
+            scoring = 'f1'
         else:
-            scoring = 'f1_samples'
+            scoring = 'f1_macro'
+
 
         dt_search = GridSearchCV(dt, param_grid=param_list, scoring=scoring, cv=cv, n_jobs=-1, iid=False)
         # print(datetime.datetime.now())

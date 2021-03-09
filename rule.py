@@ -2,7 +2,7 @@ import copy
 import json
 import numpy as np
 
-from util import vector2dict, multilabel2str
+from util import vector2dict
 from collections import defaultdict
 
 
@@ -119,7 +119,7 @@ class RuleEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def get_rule(x, dt, feature_names, class_name, class_values, numeric_columns, multi_label=False):
+def get_rule(x, dt, feature_names, class_name, class_values, numeric_columns):
 
     x = x.reshape(1, -1)
     feature = dt.tree_.feature
@@ -140,7 +140,7 @@ def get_rule(x, dt, feature_names, class_name, class_values, numeric_columns, mu
             premises.append(Condition(att, op, thr, iscont))
 
     dt_outcome = dt.predict(x)[0]
-    cons = class_values[int(dt_outcome)] if not multi_label else multilabel2str(dt_outcome, class_values)
+    cons = class_values[int(dt_outcome)]
     premises = compact_premises(premises)
     return Rule(premises, cons, class_name)
 
@@ -166,7 +166,7 @@ def get_depth(dt):
     return depth
 
 
-def get_rules(dt, feature_names, class_name, class_values, numeric_columns, multi_label=False):
+def get_rules(dt, feature_names, class_name, class_values, numeric_columns):
 
     n_nodes = dt.tree_.node_count
     feature = dt.tree_.feature
@@ -222,15 +222,14 @@ def get_rules(dt, feature_names, class_name, class_values, numeric_columns, mult
                 iscont = att in numeric_columns
                 premises.append(Condition(att, op, thr, iscont))
 
-            cons = class_values[int(value[node_index[-1]])] if not multi_label else multilabel2str(
-                value[node_index[-1]], class_values)
+            cons = class_values[int(value[node_index[-1]])]
             premises = compact_premises(premises)
             rules.append(Rule(premises, cons, class_name))
 
     else:
         x = np.zeros(len(feature_names)).reshape(1, -1)
         dt_outcome = dt.predict(x)[0]
-        cons = class_values[int(dt_outcome)] if not multi_label else multilabel2str(dt_outcome, class_values)
+        cons = class_values[int(dt_outcome)]
         rules = [Rule([], cons, class_name)]
     return rules
 
@@ -262,21 +261,20 @@ def compact_premises(plist):
 
 
 def get_counterfactual_rules(x, y, dt, Z, Y, feature_names, class_name, class_values, numeric_columns, features_map,
-                             features_map_inv, bb_predict=None, multi_label=False):
+                             features_map_inv, bb_predict=None):
     clen = np.inf
     crule_list = list()
     delta_list = list()
     Z1 = Z[np.where(Y != y)[0]]
     xd = vector2dict(x, feature_names)
     for z in Z1:
-        crule = get_rule(z, dt, feature_names, class_name, class_values, numeric_columns, multi_label)
+        crule = get_rule(z, dt, feature_names, class_name, class_values, numeric_columns)
         delta, qlen = get_falsified_conditions(xd, crule)
 
         if bb_predict is not None:
             xc = apply_counterfactual(x, delta, feature_names, features_map, features_map_inv, numeric_columns)
             bb_outcomec = bb_predict(xc.reshape(1, -1))[0]
-            bb_outcomec = class_values[bb_outcomec] if isinstance(class_name, str) else multilabel2str(bb_outcomec,
-                                                                                                       class_values)
+            bb_outcomec = class_values[bb_outcomec]
             dt_outcomec = crule.cons
             # print(bb_outcomec, dt_outcomec, bb_outcomec == dt_outcomec)
 
@@ -300,23 +298,6 @@ def get_counterfactual_rules(x, y, dt, Z, Y, feature_names, class_name, class_va
                 if delta not in delta_list:
                     crule_list.append(crule)
                     delta_list.append(delta)
-
-    # if bb_predict is not None:
-    #     cleaned_crules = list()
-    #     cleaned_deltas = list()
-    #     for crule, delta in zip(crule_list, delta_list):
-    #         xc = apply_counterfactual(x, delta, feature_names, features_map, features_map_inv, numeric_columns)
-    #
-    #         bb_outcomec = bb_predict(xc.reshape(1, -1))[0]
-    #         bb_outcomec = class_values[bb_outcomec] if isinstance(class_name, str) else multilabel2str(bb_outcomec,
-    #                                                                                                    class_values)
-    #         dt_outcomec = crule.cons
-    #         if bb_outcomec == dt_outcomec:
-    #             cleaned_crules.append(crule)
-    #             cleaned_deltas.append(delta)
-    #
-    #     crule_list = cleaned_crules
-    #     delta_list = cleaned_deltas
 
     return crule_list, delta_list
 

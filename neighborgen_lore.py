@@ -9,7 +9,7 @@ class LoreNeighborhoodGenerator(object):
         self.verbose = verbose
 
 
-    def vicinity_sampling(self, z, n=1000, threshold=None, kind="gaussian_matched", distribution=None,
+    def vicinity_sampling(self, z, cat_features, n=1000, threshold=None, kind="gaussian_matched", distribution=None,
                           distribution_kwargs=dict(), **kwargs):
         if self.verbose:
             print("\nSampling -->", kind)
@@ -26,11 +26,26 @@ class LoreNeighborhoodGenerator(object):
         else:
             raise Exception("Vicinity sampling kind not valid")
 
+        # if data has categorical features
+        if cat_features:
+           Z = self.categorical_correction(Z, cat_features)
+
+
         # qui aggiungere copia variabili non modificabili
 
-        # qui aggiungere correzione categorici
+
         return Z
 
+    def categorical_correction(self, Z, cat_feat):
+        for idx_list in cat_feat:
+
+            idx_set_to_one = np.argmax(Z[:, idx_list], axis=1)
+            vals = np.zeros((len(Z), len(idx_list)))
+            for i, j in zip(range(len(Z)), idx_set_to_one):
+                vals[i, j] = 1
+            Z[:, idx_list] = vals
+
+        return Z
 
     def gaussian_matched_vicinity_sampling(self, z, epsilon, n=1):
         return self.gaussian_vicinity_sampling(z, epsilon, n) / np.sqrt(1 + (epsilon ** 2))
@@ -106,8 +121,8 @@ class LoreNeighborhoodGenerator(object):
 
 
 
-    def binary_sampling_search(self, z, z_label, blackbox, lower_threshold=0, upper_threshold=4, n=10000, n_batch=1000,
-                               stopping_ratio=0.01, kind="gaussian_matched", vicinity_sampler_kwargs=dict(),
+    def binary_sampling_search(self, z, z_label, blackbox, cat_features, lower_threshold=0, upper_threshold=4, n=10000,
+                               n_batch=1000, stopping_ratio=0.01, kind="gaussian_matched", vicinity_sampler_kwargs=dict(),
                                check_upper_threshold=True, final_counterfactual_search=True, downward_only=True,
                                **kwargs):
         """ To find closest counterfactuals and
@@ -119,8 +134,8 @@ class LoreNeighborhoodGenerator(object):
         # sanity check for the upper threshold
         if check_upper_threshold:
             for i in range(int(n / n_batch)):
-                Z = self.vicinity_sampling(z=z, n=n_batch, threshold=upper_threshold, kind=kind,
-                                           **vicinity_sampler_kwargs)
+                Z = self.vicinity_sampling(z=z, cat_features=cat_features, n=n_batch, threshold=upper_threshold,
+                                           kind=kind, **vicinity_sampler_kwargs)
                 y = blackbox.predict(Z)
                 if not np.all(y == z_label):
                     break
@@ -140,7 +155,8 @@ class LoreNeighborhoodGenerator(object):
             if self.verbose:
                 print("   Testing threshold value:", threshold)
             for i in range(int(n / n_batch)):
-                Z = self.vicinity_sampling(z=z, n=n_batch, threshold=threshold, kind=kind, **vicinity_sampler_kwargs)
+                Z = self.vicinity_sampling(z=z, cat_features=cat_features, n=n_batch, threshold=threshold,
+                                           kind=kind, **vicinity_sampler_kwargs)
                 y = blackbox.predict(Z)
                 if not np.all(y == z_label):  # if we found already some counterfactuals
                     counterfactuals_idxs = np.argwhere(y != z_label).ravel()
@@ -156,8 +172,8 @@ class LoreNeighborhoodGenerator(object):
         if final_counterfactual_search:
             if self.verbose:
                 print("   Final counterfactual search... (this could take a while)", end=" ")
-            Z = self.vicinity_sampling(z=z, n=n, threshold=latest_working_threshold, kind=kind,
-                                       **vicinity_sampler_kwargs)
+            Z = self.vicinity_sampling(z=z, cat_features=cat_features, n=n, threshold=latest_working_threshold,
+                                       kind=kind, **vicinity_sampler_kwargs)
             y = blackbox.predict(Z)
             counterfactuals_idxs = np.argwhere(y != z_label).ravel()
             Z_counterfactuals.append(Z[counterfactuals_idxs])
@@ -167,42 +183,55 @@ class LoreNeighborhoodGenerator(object):
         closest_counterfactual = min(Z_counterfactuals, key=lambda p: sum((p - z.ravel()) ** 2))
         return closest_counterfactual.reshape(1, -1), latest_working_threshold
 
-    def generate_fn(self, x, sample=1000, nbr_runs=10):
+    def generate_fn(self, x, sample=1000, nbr_runs=10, categorical_columns=None):
         y_val = self.blackbox.predict(x.reshape(1, -1))[0]
 
         # cf: closest_counterfactual
         # bt: latest_working_threshold
         if self.neigh_type == 'gmgm':
-            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
-            Z = self.vicinity_sampling(z=cf, n=sample, threshold=bt, kind="gaussian_matched")
+            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox,
+                                                 cat_features=categorical_columns, kind="gaussian_matched")
+            Z = self.vicinity_sampling(z=cf, cat_features=categorical_columns, n=sample, threshold=bt,
+                                       kind="gaussian_matched")
             Z = np.vstack([x.reshape(1, -1), cf, Z])
 
         elif self.neigh_type == 'gmus':
-            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
-            Z = self.vicinity_sampling(z=cf, n=sample, threshold=bt, kind="uniform_sphere")
+            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox,
+                                                 cat_features=categorical_columns, kind="gaussian_matched")
+            Z = self.vicinity_sampling(z=cf, cat_features=categorical_columns, n=sample, threshold=bt,
+                                       kind="uniform_sphere")
             Z = np.vstack([x.reshape(1, -1), cf, Z])
 
         elif self.neigh_type == 'gmgmx':
-            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
-            Zcf = self.vicinity_sampling(z=cf, n=sample//2, threshold=bt, kind="gaussian_matched")
-            Zx = self.vicinity_sampling(z=x.reshape(1, -1), n=sample//2, threshold=bt, kind="gaussian_matched")
+            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox,
+                                                 cat_features=categorical_columns, kind="gaussian_matched")
+            Zcf = self.vicinity_sampling(z=cf, cat_features=categorical_columns, n=sample//2, threshold=bt,
+                                         kind="gaussian_matched")
+            Zx = self.vicinity_sampling(z=x.reshape(1, -1), cat_features=categorical_columns, n=sample//2, threshold=bt,
+                                        kind="gaussian_matched")
             Z = np.vstack([x.reshape(1, -1), cf, Zcf, Zx])
 
         elif self.neigh_type == 'gmusx':
-            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
-            Zcf = self.vicinity_sampling(z=cf, n=sample//2, threshold=bt, kind="uniform_sphere")
-            Zx = self.vicinity_sampling(z=x.reshape(1, -1), n=sample//2, threshold=bt, kind="uniform_sphere")
+            cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox,
+                                                 cat_features=categorical_columns, kind="gaussian_matched")
+            Zcf = self.vicinity_sampling(z=cf, cat_features=categorical_columns, n=sample//2, threshold=bt,
+                                         kind="uniform_sphere")
+            Zx = self.vicinity_sampling(z=x.reshape(1, -1), cat_features=categorical_columns, n=sample//2, threshold=bt,
+                                        kind="uniform_sphere")
             Z = np.vstack([x.reshape(1, -1), cf, Zcf, Zx])
 
         elif self.neigh_type == 'ngmusx':
             Z_list = list()
             for _ in range(nbr_runs - 1):
-                cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox, kind="gaussian_matched")
-                Zcf = self.vicinity_sampling(z=cf, n=sample//nbr_runs, threshold=bt, kind="uniform_sphere")
+                cf, bt = self.binary_sampling_search(x.reshape(1, -1), y_val, self.blackbox,
+                                                     cat_features=categorical_columns, kind="gaussian_matched")
+                Zcf = self.vicinity_sampling(z=cf, cat_features=categorical_columns, n=sample//nbr_runs, threshold=bt,
+                                             kind="uniform_sphere")
                 Zcf = np.vstack([cf, Zcf])
                 Z_list.append(Zcf)
 
-            Zx = self.vicinity_sampling(z=x.reshape(1, -1), n=sample//nbr_runs, threshold=bt, kind="uniform_sphere")
+            Zx = self.vicinity_sampling(z=x.reshape(1, -1), cat_features=categorical_columns, n=sample//nbr_runs,
+                                        threshold=bt, kind="uniform_sphere")
             Z = np.vstack([x.reshape(1, -1), Zx, np.vstack(Z_list)])
 
         else:
