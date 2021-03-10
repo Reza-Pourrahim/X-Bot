@@ -18,16 +18,24 @@ class Explanation(object):
         self.deltas = None
 
         self.fidelity = None
+        self.feature_importance = None
         self.dt = None
 
     def __str__(self):
-        deltas_str = '{ '
-        for i, delta in enumerate(self.deltas):
-            deltas_str += '      { ' if i > 0 else '{ '
-            deltas_str += ', '.join([str(s) for s in delta])
-            deltas_str += ' },\n'
-        deltas_str = deltas_str[:-2] + ' }'
-        return 'r = %s\nc = %s' % (self.rule, deltas_str)
+        # deltas_str = '{ '
+        # for i, delta in enumerate(self.deltas):
+        #     deltas_str += '      { ' if i > 0 else '{ '
+        #     deltas_str += ', '.join([str(s) for s in delta])
+        #     deltas_str += ' },\n'
+        # deltas_str = deltas_str[:-2] + ' }'
+
+        rstr = self.rstr()
+        cstr = self.cstr()
+        fistr = self.feature_importance_str()
+        return 'r = %s\nfeature importance = %s\nc = %s' % (rstr, fistr, cstr)
+
+    def feature_importance_str(self):
+        return self.feature_importance
 
     def rstr(self):
         return self.rule
@@ -59,6 +67,7 @@ class ExplanationEncoder(json.JSONEncoder):
                 'deltas': [[ce.default(c) for c in cs] for cs in obj.deltas],
                 'fidelity': obj.fidelity,
                 'dt': bal,
+                'feature_importance': obj.feature_importance,
             }
             return json_obj
         return NumpyEncoder().default(obj)
@@ -74,6 +83,7 @@ def json2explanation(obj):
     exp.deltas = [[json2cond(c) for c in cs] for cs in obj['deltas']]
     exp.dt = pickle.loads(bitarray.bitarray(obj['dt']).tobytes())
     exp.fidelity = obj['fidelity']
+    exp.feature_importance = obj['feature_importance']
     return exp
 
 

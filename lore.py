@@ -103,6 +103,7 @@ class LORE(object):
         # Return the mean accuracy on the given test data and labels.
         fidelity = dt.score(Z, Yb, sample_weight=weights)
 
+
         if self.verbose:
             print('retrieving explanation')
 
@@ -110,6 +111,23 @@ class LORE(object):
         crules, deltas = get_counterfactual_rules(x, Yc[0], dt, Z, Yc, self.feature_names, self.class_name,
                                                   self.class_values, self.numeric_columns, self.features_map,
                                                   self.features_map_inv, self.filter_crules)
+
+
+        # Feature importance
+        att_list=[]
+        leave_id_dt = dt.apply(x.reshape(1, -1))  # Return the index of the leaf that each sample is predicted as.
+        node_index_dt = dt.decision_path(x.reshape(1, -1)).indices
+        feature_dt = dt.tree_.feature
+        for node_id in node_index_dt:
+            if leave_id_dt[0] == node_id:
+                break
+            else:
+                att = self.feature_names[feature_dt[node_id]]
+                att_list.append(att)
+        feature_importance_all = dt.feature_importances_
+        dict_feature_importance = dict(zip(self.feature_names, feature_importance_all))
+        feature_importance = {k: v for k, v in dict_feature_importance.items() if k in att_list}
+
 
         exp = Explanation()
         exp.bb_pred = Yb[0]
@@ -119,5 +137,6 @@ class LORE(object):
         exp.deltas = deltas
         exp.dt = dt
         exp.fidelity = fidelity
+        exp.feature_importance = feature_importance
 
         return exp
