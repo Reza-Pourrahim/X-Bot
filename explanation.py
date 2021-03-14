@@ -20,6 +20,8 @@ class Explanation(object):
         self.fidelity = None
         self.feature_importance = None
         self.dt = None
+        self.exemplars = None
+        self.cexemplars = None
 
     def __str__(self):
         # deltas_str = '{ '
@@ -32,7 +34,16 @@ class Explanation(object):
         rstr = self.rstr()
         cstr = self.cstr()
         fistr = self.feature_importance_str()
-        return 'r = %s\nfeature importance = %s\nc = %s' % (rstr, fistr, cstr)
+        exemstr = self.exemplar_str()
+        cexemstr = self.cexemplar_str()
+        return 'r = %s\n\nfeature importance = %s\n\nc = %s\n\nexemplars = %s\n\ncounter-exemplars = %s'\
+               % (rstr, fistr, cstr, exemstr, cexemstr)
+
+    def exemplar_str(self):
+        return self.exemplars
+
+    def cexemplar_str(self):
+        return self.cexemplars
 
     def feature_importance_str(self):
         return self.feature_importance
