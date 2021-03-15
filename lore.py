@@ -153,7 +153,7 @@ class LORE(object):
 
         # find instance x in obtained list and remove it
         idx_to_remove = np.where((exemplar_vals == x).all(axis=1))[0]
-        if idx_to_remove:
+        if idx_to_remove.any():
             exemplar_vals = np.delete(exemplar_vals, idx_to_remove, axis=0)
 
         distance_x_exemplar = cdist(x.reshape(1, -1), exemplar_vals, metric='euclidean').ravel()
