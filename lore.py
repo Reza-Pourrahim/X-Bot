@@ -11,6 +11,7 @@ from decision_tree import learn_local_decision_tree
 from neighborgen_lore import LoreNeighborhoodGenerator
 from rule import get_rule, get_counterfactual_rules
 from util import neuclidean
+from sklearn import preprocessing
 
 
 def default_kernel(d, kernel_width):
@@ -152,8 +153,10 @@ class LORE(object):
         cexemplar_vals = self.K[cexemplar_idx]
 
         # find instance x in obtained list and remove it
-        idx_to_remove = np.where((exemplar_vals == x).all(axis=1))[0]
-        if idx_to_remove.any():
+        idx_to_remove = None
+        if x in exemplar_vals:
+            idx_to_remove = np.where((exemplar_vals == x).all(axis=1))[0]
+        if idx_to_remove is not None:
             exemplar_vals = np.delete(exemplar_vals, idx_to_remove, axis=0)
 
         distance_x_exemplar = cdist(x.reshape(1, -1), exemplar_vals, metric='euclidean').ravel()
@@ -162,12 +165,12 @@ class LORE(object):
         if len(exemplar_vals) < n or len(cexemplar_vals) < n:
             print('maximum number of exemplars and counter-exemplars founded is : %s, %s', len(exemplar_vals),
                   len(cexemplar_vals))
-        else:
-            first_n_dist_id = distance_x_exemplar.argsort()[:n]
-            first_n_exemplar = exemplar_vals[first_n_dist_id]
+            n = min(len(cexemplar_vals),len(exemplar_vals))
+        first_n_dist_id = distance_x_exemplar.argsort()[:n]
+        first_n_exemplar = exemplar_vals[first_n_dist_id]
 
-            first_n_dist_id_c = distance_x_cexemplar.argsort()[:n]
-            first_n_cexemplar = cexemplar_vals[first_n_dist_id_c]
+        first_n_dist_id_c = distance_x_cexemplar.argsort()[:n]
+        first_n_cexemplar = cexemplar_vals[first_n_dist_id_c]
 
         return first_n_exemplar, first_n_cexemplar
 
