@@ -65,6 +65,7 @@ class LORE(object):
         if isinstance(samples, int):
             if self.verbose:
                 print('generating neighborhood - %s' % self.neigh_type)
+
             Z = self.neighgen_fn(x, samples, nbr_runs, categorical_columns=self.categorical_columns)
         else:
             Z = samples
@@ -115,7 +116,7 @@ class LORE(object):
                                                   self.class_values, self.numeric_columns, self.features_map,
                                                   self.features_map_inv, self.filter_crules)
         # Feature Importance
-        feature_importance = self.get_feature_importance(dt, x)
+        feature_importance, feature_importance_all = self.get_feature_importance(dt, x)
 
         # Exemplar and Counter-exemplar
         exemplars_rec, cexemplars_rec = self.get_exemplars_cexemplars(dt, x, exemplar_num)
@@ -133,6 +134,7 @@ class LORE(object):
         exp.dt = dt
         exp.fidelity = fidelity
         exp.feature_importance = feature_importance
+        exp.feature_importance_all = feature_importance_all
         exp.exemplars = exemplars
         exp.cexemplars = cexemplars
 
@@ -189,5 +191,5 @@ class LORE(object):
         # Feature importance
         feature_importance_all = dt.feature_importances_
         dict_feature_importance = dict(zip(self.feature_names, feature_importance_all))
-        feature_importance = {k: v for k, v in dict_feature_importance.items() if k in att_list}
-        return feature_importance
+        feature_importance_rule = {k: v for k, v in dict_feature_importance.items() if k in att_list}
+        return feature_importance_rule, dict_feature_importance

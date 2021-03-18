@@ -19,6 +19,7 @@ class Explanation(object):
 
         self.fidelity = None
         self.feature_importance = None
+        self.feature_importance_all = None
         self.dt = None
         self.exemplars = None
         self.cexemplars = None
