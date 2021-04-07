@@ -1,0 +1,28 @@
+intent,question
+performance,How accurate/precise/reliable are the predictions?
+performance,How often does the system make mistakes?
+performance,In what situations is the system likely to be correct/incorrect?
+performance,What are the limitations of the system?
+performance,What kind of mistakes is the system likely to make?
+performance,Is the system's performance good enough for...
+why,explain it to me
+why,why?
+why,how was this calculated?
+why,Why/how is this instance given this prediction?
+why,What feature(s) of this instance leads to the system's prediction? 
+why,Why are instance A and B) given the same prediction?
+what if,What would the system predict if this instance changes to...?
+what if,What would the system predict if this feature of the instance changes to...?
+what if,What would the system predict for a different instance)?
+how to be that,How should this instance change to get a different prediction? 
+how to be that,How should this feature change for this instance to get a different prediction?
+how to be that,What kind of instance gets a different prediction?
+feature importance,Which are the most important variable(s)?
+feature importance,give me top feature importance
+feature importance,Does this feature infuence on prediction?
+exemplar,give me a exemplar
+exemplar,what about instances similar to this instance
+exemplar,show me an instance similar to this instance
+counter exemplar,what about instances that is not similar to this instance
+counter exemplar,what is the nearest neighbour that is not similar to this instance
+counter exemplar,give me a counter exemplar
