@@ -10,6 +10,7 @@
     remove digits
     remove stopwords
     apply the porterstemmer to keep the stem of the words
+    apply lemmatizer
 '''
 
 
