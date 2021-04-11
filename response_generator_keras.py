@@ -6,6 +6,11 @@ import pickle
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 
+import string
+punct = string.punctuation
+trantab = str.maketrans(punct, len(punct) * ' ')  # Every punctuation symbol will be replaced by a space
+whitelist = ['?', '!']
+
 
 class ResponseGeneratorKeras(object):
     def __init__(self, data, explanation, model, verbose=False):
@@ -17,15 +22,18 @@ class ResponseGeneratorKeras(object):
         self.words = pickle.load(open('words.pkl', 'rb'))
         self.classes = pickle.load(open('classes.pkl', 'rb'))
 
-    def clean_up_text(self, user_input):
-        text_words = nltk.word_tokenize(user_input)
-        text_words = [lemmatizer.lemmatize(word.lower()) for word in text_words]
-        return text_words
+
+    def text_clean(self, text):
+        text = text.lower().translate(trantab) # remove_punctuation
+        text_words = nltk.word_tokenize(text)
+        words = [lemmatizer.lemmatize(w) for w in text_words if w not in whitelist]
+        return words
+
 
     # return bag of words array: 0 or 1 for each word in the bag that exists in the user input
     def bag_of_words(self, user_input):
         # tokenize the pattern
-        user_input_words = self.clean_up_text(user_input)
+        user_input_words = self.text_clean(user_input)
         # bag of words - matrix of N words, vocabulary matrix
         bag = [0] * len(self.words)
         for s in user_input_words:
@@ -41,7 +49,7 @@ class ResponseGeneratorKeras(object):
         # filter out predictions below a threshold
         bag = self.bag_of_words(user_input)
         res = self.model.predict(np.array([bag]))[0]
-        ERROR_THRESHOLD = 0.25
+        ERROR_THRESHOLD = 0.7
         results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
 
         # sort by strength of probability
@@ -54,7 +62,11 @@ class ResponseGeneratorKeras(object):
     def getResponse(self, ints):
         result = ''
         context = ''
-        tag = ints[0]['intent']
+        if not ints:
+            tag = 'noanswer'
+        else:
+            tag = ints[0]['intent']
+
         list_of_intents = self.data['intents']
         for i in list_of_intents:
             if i['tag'] == tag:
@@ -94,16 +106,16 @@ class ResponseGeneratorKeras(object):
         while flag is True:
             user_input = input()
             if user_input == '':
-                print('Please type something!\n')
-
-            output_response, context = self.chatbot_response(user_input)
-
-            print("X-Bot: %s" % output_response)
-            if context != "" and context != "exit":
-                explain = self.get_explanation(context)
-                print(explain)
-                print('\n')
-            elif context == "exit":
-                flag = False
+                print('X-Bot: Please type something!\n')
             else:
-                print('\n')
+                output_response, context = self.chatbot_response(user_input)
+
+                print("X-Bot: %s" % output_response)
+                if context != "" and context != "exit":
+                    explain = self.get_explanation(context)
+                    print(explain)
+                    print('\n')
+                elif context == "exit":
+                    flag = False
+                else:
+                    print('\n')

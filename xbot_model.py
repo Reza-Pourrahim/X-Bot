@@ -1,9 +1,15 @@
 import nltk
 nltk.download('punkt')
 nltk.download('wordnet')
+
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
+
 import pickle
+import string
+punct = string.punctuation
+trantab = str.maketrans(punct, len(punct) * ' ')  # Every punctuation symbol will be replaced by a space
+whitelist = ['?', '!']
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -20,14 +26,22 @@ class XBotModel(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
 
+    def text_clean(self, text):
+        text = text.lower().translate(trantab) # remove_punctuation
+        text_words = nltk.word_tokenize(text)
+        words = [lemmatizer.lemmatize(w) for w in text_words if w not in whitelist]
+        return words
+
     def prepare_train_dataset(self, data):
         words = []
         classes = []
         documents = []
         for intent in data['intents']:
             for pattern in intent['patterns']:
-                # take each word and tokenize it
+
+                # clean the pattern
                 w = nltk.word_tokenize(pattern)
+                w = self.text_clean(pattern)
                 words.extend(w)
 
                 # adding documents
@@ -37,27 +51,23 @@ class XBotModel(object):
                 if intent['tag'] not in classes:
                     classes.append(intent['tag'])
 
-        ignore_words = ['?', '!']
-        words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_words]
-
+        # a list of different words that could be used for pattern recognition
         words = sorted(list(set(words)))
+        # a list of different types of classes of responses
         classes = sorted(list(set(classes)))
-
         # save as a pickle
         pickle.dump(words, open('words.pkl', 'wb'))
         pickle.dump(classes, open('classes.pkl', 'wb'))
 
-        # train dataset
+        # training dataset
         training_dataset = []
         output_empty = [0] * len(classes)
 
         for doc in documents:
             # initializing bag of words
             bag = []
-            # list of tokenized words for the pattern
+
             pattern_words = doc[0]
-            # lemmatize each word - create base word, in attempt to represent related words
-            pattern_words = [lemmatizer.lemmatize(word.lower()) for word in pattern_words]
             # create our bag of words array with 1, if word match found in current pattern
             for w in words:
                 bag.append(1) if w in pattern_words else bag.append(0)
@@ -82,6 +92,7 @@ class XBotModel(object):
         num_classes = len(train_y[0])
 
         # Model architecture
+        # 3 layers. First layer 128 neurons, second layer 64 neurons and 3rd output layer contains number of neurons
         model = Sequential([
             Dense(units=128, input_shape=(input_size,), activation='relu'),
             Dropout(dropout),
@@ -97,6 +108,10 @@ class XBotModel(object):
     def compile_fit_model(self, model, train_x, train_y, epochs=100, batch_size=5, lr=5e-3,
                           loss='categorical_crossentropy'):
 
+        if self.verbose:
+            verb = 1
+        else:
+            verb = 0
         # Model compilation
         model.compile(optimizer=Adam(learning_rate=lr),
                       loss=loss,
@@ -107,6 +122,6 @@ class XBotModel(object):
                             y=np.array(train_y),
                             epochs=epochs,
                             batch_size=batch_size,
-                            verbose=1)
+                            verbose=verb)
         return mymodel
 
