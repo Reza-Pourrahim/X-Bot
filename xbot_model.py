@@ -20,6 +20,8 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import Adam
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+
 
 
 class XBotModel(object):
@@ -53,7 +55,7 @@ class XBotModel(object):
 
         # a list of different words that could be used for pattern recognition
         words = sorted(list(set(words)))
-        # a list of different types of classes of responses
+        # a list of different types of intents of responses
         classes = sorted(list(set(classes)))
         # save as a pickle
         pickle.dump(words, open('words.pkl', 'wb'))
@@ -91,8 +93,7 @@ class XBotModel(object):
         input_size = len(train_x[0])
         num_classes = len(train_y[0])
 
-        # Model architecture
-        # 3 layers. First layer 128 neurons, second layer 64 neurons and 3rd output layer contains number of neurons
+        # Model
         model = Sequential([
             Dense(units=128, input_shape=(input_size,), activation='relu'),
             Dropout(dropout),
@@ -106,12 +107,16 @@ class XBotModel(object):
         return model
 
     def compile_fit_model(self, model, train_x, train_y, epochs=100, batch_size=5, lr=5e-3,
-                          loss='categorical_crossentropy'):
+                          earlystopping_patience=10, loss='categorical_crossentropy'):
 
         if self.verbose:
             verb = 1
         else:
             verb = 0
+
+        es = EarlyStopping(monitor='val_loss', patience=earlystopping_patience, verbose=verb)
+        mc = ModelCheckpoint('best_xbot_model.h5', monitor='val_loss', save_best_only=True)
+
         # Model compilation
         model.compile(optimizer=Adam(learning_rate=lr),
                       loss=loss,
@@ -120,8 +125,10 @@ class XBotModel(object):
         # Model Training and Validation
         mymodel = model.fit(x=np.array(train_x),
                             y=np.array(train_y),
+                            validation_split=0.3,
                             epochs=epochs,
                             batch_size=batch_size,
-                            verbose=verb)
+                            verbose=verb,
+                            callbacks=[es, mc]).history
         return mymodel
 

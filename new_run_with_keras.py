@@ -13,6 +13,7 @@ from xbot_model import XBotModel
 from keras.models import load_model
 
 import json
+import matplotlib.pyplot as plt
 
 
 # ipynb to py in pycharm:
@@ -196,49 +197,29 @@ model = XBot_obj.create_model(train_x, train_y, dropout=0.5)
 # compile and fit the model
 mymodel = XBot_obj.compile_fit_model(model, train_x, train_y, epochs=100, 
                                      batch_size=5,
-                                     lr=5e-3, 
-                                     loss='categorical_crossentropy')
+                                     lr=5e-3,
+                                     earlystopping_patience=20,
+                                     loss='binary_crossentropy')
 
+# plot the Train and Validation loss
+plt.plot(mymodel['loss'], label='Train')
+plt.plot(mymodel['val_loss'], label='Val')
+plt.xlabel('Epochs')
+plt.ylabel('Cross-Entropy')
+plt.legend()
+plt.show()
 
 # In[29]:
+trained_model = load_model('best_xbot_model.h5')
 
-
-_, accuracy = model.evaluate(train_x, train_y)
-print('Accuracy: %.2f' % (accuracy*100))
-
-
-# In[25]:
-
-
-# save the model
-model.save('xbot_model.h5', mymodel)
+_, accuracy = trained_model.evaluate(train_x, train_y)
+print('Train Accuracy: %.2f' % (accuracy*100))
 
 
 # ### Chatbot
-
-# In[26]:
-
-
-# load model
-model = load_model('xbot_model.h5')
-
-
 # In[27]:
 
 
-xbot_response = ResponseGeneratorKeras(data, explanation, model)
+xbot_response = ResponseGeneratorKeras(data, explanation, trained_model)
 
 xbot_response.start()
-
-
-# In[27]:
-
-
-
-
-
-# In[27]:
-
-
-
-

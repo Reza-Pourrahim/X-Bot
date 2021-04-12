@@ -22,13 +22,11 @@ class ResponseGeneratorKeras(object):
         self.words = pickle.load(open('words.pkl', 'rb'))
         self.classes = pickle.load(open('classes.pkl', 'rb'))
 
-
     def text_clean(self, text):
         text = text.lower().translate(trantab) # remove_punctuation
         text_words = nltk.word_tokenize(text)
         words = [lemmatizer.lemmatize(w) for w in text_words if w not in whitelist]
         return words
-
 
     # return bag of words array: 0 or 1 for each word in the bag that exists in the user input
     def bag_of_words(self, user_input):
@@ -49,7 +47,7 @@ class ResponseGeneratorKeras(object):
         # filter out predictions below a threshold
         bag = self.bag_of_words(user_input)
         res = self.model.predict(np.array([bag]))[0]
-        ERROR_THRESHOLD = 0.7
+        ERROR_THRESHOLD = 0.5
         results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
 
         # sort by strength of probability
@@ -59,7 +57,7 @@ class ResponseGeneratorKeras(object):
             return_list.append({"intent": self.classes[r[0]], "probability": str(r[1])})
         return return_list
 
-    def getResponse(self, ints):
+    def get_response(self, ints):
         result = ''
         context = ''
         if not ints:
@@ -77,7 +75,7 @@ class ResponseGeneratorKeras(object):
 
     def chatbot_response(self, user_input):
         intents = self.predict_class(user_input)
-        output_response, context = self.getResponse(intents)
+        output_response, context = self.get_response(intents)
 
         return output_response, context[0]
 
