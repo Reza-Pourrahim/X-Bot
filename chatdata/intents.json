@@ -1,7 +1,7 @@
 {"intents": [
         {"tag": "greeting",
-         "patterns": ["Ciao", "Buongiorno", "Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
-         "responses": ["Ciao", "Buongiorno", "Hello", "Good to see you again", "Hi there, how can I help?"],
+         "patterns": ["Ciao", "Buongiorno", "Hi", "Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
+         "responses": ["Ciao", "Buongiorno", "Hi", "Hello", "Good to see you again", "Hi there, how can I help?"],
          "context": [""]
         },
         {"tag": "goodbye",
@@ -25,12 +25,12 @@
          "context": [""]
         },
         {"tag": "performance",
-         "patterns": ["How accurate/precise/reliable are the predictions?","How often does the system make mistakes?","In what situations is the system likely to be correct/incorrect?","What are the limitations of the system?","What kind of mistakes is the system likely to make?","Is the system's performance good enough for..."],
+         "patterns": ["how about the performance?","How precise are the predictions?","How reliable are the predictions?","How accurate are the predictions?","How often does the system make mistakes?","In what situations is the system likely to be incorrect?","In what situations is the system likely to be correct?","What are the limitations of the system?","What kind of mistakes is the system likely to make?","Is the system's performance good enough for..."],
          "responses": ["The fidelity is: "],
          "context": ["fidelity"]
 		},
 		{"tag": "why",
-         "patterns": ["explain it to me","why?","how was this calculated?","Why/how is this instance given this prediction?","What feature(s) of this instance leads to the system's prediction?","Why are instance A and B) given the same prediction?"],
+         "patterns": ["explain it to me","explain to me","why?","why do you give me this explanation?","how was this calculated?","how is this instance given this prediction?","Why is this instance given this prediction?","What feature(s) of this instance leads to the system's prediction?","Why are instance A and B given the same prediction?"],
          "responses": ["The factual rule are: "],
          "context": ["rule"]
 		},

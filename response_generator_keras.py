@@ -6,10 +6,22 @@ import pickle
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 
-import string
+import re, string
 punct = string.punctuation
 trantab = str.maketrans(punct, len(punct) * ' ')  # Every punctuation symbol will be replaced by a space
 whitelist = ['?', '!']
+
+# Using symspell to correct spelling
+import pkg_resources
+from symspellpy import SymSpell, Verbosity
+
+sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
+dictionary_path = pkg_resources.resource_filename("symspellpy",
+                                                  "frequency_dictionary_en_82_765.txt")
+bigram_path = pkg_resources.resource_filename("symspellpy",
+                                              "frequency_bigramdictionary_en_243_342.txt")
+sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 
 class ResponseGeneratorKeras(object):
@@ -22,15 +34,60 @@ class ResponseGeneratorKeras(object):
         self.words = pickle.load(open('words.pkl', 'rb'))
         self.classes = pickle.load(open('classes.pkl', 'rb'))
 
+    def decontractions(self, phrase):
+        """decontracted takes text and convert contractions into natural form.
+         ref: https://stackoverflow.com/questions/19790188/expanding-english-language-contractions-in-python/47091490#47091490"""
+        # specific
+        phrase = re.sub(r"won\'t", "will not", phrase)
+        phrase = re.sub(r"can\'t", "can not", phrase)
+        phrase = re.sub(r"won\’t", "will not", phrase)
+        phrase = re.sub(r"can\’t", "can not", phrase)
+
+        # general
+        phrase = re.sub(r"n\'t", " not", phrase)
+        phrase = re.sub(r"\'re", " are", phrase)
+        phrase = re.sub(r"\'s", " is", phrase)
+        phrase = re.sub(r"\'d", " would", phrase)
+        phrase = re.sub(r"\'ll", " will", phrase)
+        phrase = re.sub(r"\'t", " not", phrase)
+        phrase = re.sub(r"\'ve", " have", phrase)
+        phrase = re.sub(r"\'m", " am", phrase)
+
+        phrase = re.sub(r"n\’t", " not", phrase)
+        phrase = re.sub(r"\’re", " are", phrase)
+        phrase = re.sub(r"\’s", " is", phrase)
+        phrase = re.sub(r"\’d", " would", phrase)
+        phrase = re.sub(r"\’ll", " will", phrase)
+        phrase = re.sub(r"\’t", " not", phrase)
+        phrase = re.sub(r"\’ve", " have", phrase)
+        phrase = re.sub(r"\’m", " am", phrase)
+
+        return phrase
+
     def text_clean(self, text):
-        text = text.lower().translate(trantab) # remove_punctuation
+        # Lower casting
+        text = text.lower()
+        # Decontracted
+        text = self.decontractions(text)
+        # Remove more than 1 space
+        text = " ".join(text.split())
+        # Remove punctuation
+        text = text.translate(trantab)
         text_words = nltk.word_tokenize(text)
         words = [lemmatizer.lemmatize(w) for w in text_words if w not in whitelist]
         return words
 
+    def correct_spellings(self, text):
+        """ For a given sentence this function returns a sentence after correcting
+          spelling of words """
+        suggestions = sym_spell.lookup_compound(text, max_edit_distance=2)
+        return suggestions[0]._term
+
     # return bag of words array: 0 or 1 for each word in the bag that exists in the user input
     def bag_of_words(self, user_input):
-        # tokenize the pattern
+        # correcting spelling of words of user input
+        user_input = self.correct_spellings(user_input)
+        # tokenize the user input
         user_input_words = self.text_clean(user_input)
         # bag of words - matrix of N words, vocabulary matrix
         bag = [0] * len(self.words)

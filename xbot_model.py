@@ -16,23 +16,77 @@ warnings.filterwarnings("ignore")
 
 import random
 import numpy as np
+import re
 
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Dropout
+from keras.layers import Dense, Dropout
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 
+# Using symspell to correct spelling
+import pkg_resources
+from symspellpy import SymSpell, Verbosity
 
+sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
+dictionary_path = pkg_resources.resource_filename("symspellpy",
+                                                  "frequency_dictionary_en_82_765.txt")
+bigram_path = pkg_resources.resource_filename("symspellpy",
+                                              "frequency_bigramdictionary_en_243_342.txt")
+sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 class XBotModel(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
 
+    def decontractions(self, phrase):
+        """decontracted takes text and convert contractions into natural form.
+         ref: https://stackoverflow.com/questions/19790188/expanding-english-language-contractions-in-python/47091490#47091490"""
+        # specific
+        phrase = re.sub(r"won\'t", "will not", phrase)
+        phrase = re.sub(r"can\'t", "can not", phrase)
+        phrase = re.sub(r"won\’t", "will not", phrase)
+        phrase = re.sub(r"can\’t", "can not", phrase)
+
+        # general
+        phrase = re.sub(r"n\'t", " not", phrase)
+        phrase = re.sub(r"\'re", " are", phrase)
+        phrase = re.sub(r"\'s", " is", phrase)
+        phrase = re.sub(r"\'d", " would", phrase)
+        phrase = re.sub(r"\'ll", " will", phrase)
+        phrase = re.sub(r"\'t", " not", phrase)
+        phrase = re.sub(r"\'ve", " have", phrase)
+        phrase = re.sub(r"\'m", " am", phrase)
+
+        phrase = re.sub(r"n\’t", " not", phrase)
+        phrase = re.sub(r"\’re", " are", phrase)
+        phrase = re.sub(r"\’s", " is", phrase)
+        phrase = re.sub(r"\’d", " would", phrase)
+        phrase = re.sub(r"\’ll", " will", phrase)
+        phrase = re.sub(r"\’t", " not", phrase)
+        phrase = re.sub(r"\’ve", " have", phrase)
+        phrase = re.sub(r"\’m", " am", phrase)
+
+        return phrase
+
     def text_clean(self, text):
-        text = text.lower().translate(trantab) # remove_punctuation
+        # Lower casting
+        text = text.lower()
+        # Decontracted
+        text = self.decontractions(text)
+        # Remove more than 1 space
+        text = " ".join(text.split())
+        # Remove punctuation
+        text = text.translate(trantab)
         text_words = nltk.word_tokenize(text)
         words = [lemmatizer.lemmatize(w) for w in text_words if w not in whitelist]
         return words
+
+    def correct_spellings(self, text):
+        """ For a given sentence this function returns a sentence after correcting
+          spelling of words """
+        suggestions = sym_spell.lookup_compound(text, max_edit_distance=2)
+        return suggestions[0]._term
 
     def prepare_train_dataset(self, data):
         words = []
@@ -40,6 +94,9 @@ class XBotModel(object):
         documents = []
         for intent in data['intents']:
             for pattern in intent['patterns']:
+
+                # correcting spelling of words of the pattern
+                pattern = self.correct_spellings(pattern)
 
                 # clean the pattern
                 w = nltk.word_tokenize(pattern)
