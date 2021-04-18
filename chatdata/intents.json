@@ -20,37 +20,37 @@
          "context": [""]
         },
         {"tag": "options",
-         "patterns": ["How you could help me?", "What you can do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
+         "patterns": ["help","How you could help me?", "What you can do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
          "responses": ["I can give you an explanation consisting of a decision rule, explaining the factual reasons of the decision, and a set of counterfactuals, suggesting the changes in the instance features that would lead to a different outcome", "I can give you a Local Rule-based Explanations of Black Box Decision Systems"],
          "context": [""]
         },
         {"tag": "performance",
-         "patterns": ["how about the performance?","How precise are the predictions?","How reliable are the predictions?","How accurate are the predictions?","How often does the system make mistakes?","In what situations is the system likely to be incorrect?","In what situations is the system likely to be correct?","What are the limitations of the system?","What kind of mistakes is the system likely to make?","Is the system's performance good enough for..."],
+         "patterns": ["reliability","prediction accuracy","accuracy","performance","how about the performance?","How precise are the predictions?","How reliable are the predictions?","How accurate are the predictions?","How often does the system make mistakes?","In what situations is the system likely to be incorrect?","In what situations is the system likely to be correct?","What are the limitations of the system?","What kind of mistakes is the system likely to make?","Is the system's performance good enough for..."],
          "responses": ["The fidelity is: "],
          "context": ["fidelity"]
 		},
 		{"tag": "why",
-         "patterns": ["explain it to me","explain to me","why?","why do you give me this explanation?","how was this calculated?","how is this instance given this prediction?","Why is this instance given this prediction?","What feature(s) of this instance leads to the system's prediction?","Why are instance A and B given the same prediction?"],
+         "patterns": ["What rules does it use?","How does the system make this prediction?","reasons","factual rule","give me the explanation","explanation","explain","explain it to me","explain to me","why?","why do you give me this explanation?","how was this calculated?","how is this instance given this prediction?","Why is this instance given this prediction?","What feature(s) of this instance leads to the system's prediction?","Why are instance A and B given the same prediction?"],
          "responses": ["The factual rule are: "],
          "context": ["rule"]
 		},
 		{"tag": "how_to_be_that",
-         "patterns": ["How should this instance change to get a different prediction?","How should this feature change for this instance to get a different prediction?","What kind of instance gets a different prediction?"],
+         "patterns": ["counterfactual rule","counter factual","How should this instance change to get a different prediction?","How should this feature change for this instance to get a different prediction?","What kind of instance gets a different prediction?"],
          "responses": ["The counterfactual rules are: "],
          "context": ["crule"]
 		},
 		{"tag": "feature_importance",
-         "patterns": ["Which are the most important variable(s)?","give me top feature importance","Does this feature influence on prediction?"],
+         "patterns": ["How does it weigh different features?","Is feature X used or not used for the predictions?","What features does the system consider?","top feature importance","important variable","important feature","feature importance","top feature","Which are the most important variable(s)?","give me top feature importance","Does this feature influence on prediction?"],
          "responses": ["The most important features are: "],
          "context": ["feature_importance"]
 		},
 		{"tag": "exemplar",
-         "patterns": ["give me a exemplar","what about instances similar to this instance","show me an instance similar to this instance"],
+         "patterns": ["a exemplar","some exemplar","similar instance","exemplar","give me an exemplar","what about instances similar to this instance","show me an instance similar to this instance"],
          "responses": ["The exemplars are: "],
          "context": ["exemplar"]
 		},
 		{"tag": "counter_exemplar",
-         "patterns": ["what about instances that is not similar to this instance","what is the nearest neighbour that is not similar to this instance","give me a counter exemplar"],
+         "patterns": ["not similar instance","counter exemplar","what about instances that is not similar to this instance","what is the nearest neighbour that is not similar to this instance","give me a counter exemplar"],
          "responses": ["The counter exemplars are: "],
          "context": ["cexemplar"]
 		}
