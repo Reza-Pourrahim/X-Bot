@@ -113,18 +113,22 @@ class ResponseGenerator(object):
         return user_input_seq
 
     def predict_class(self, user_input):
-        user_input_seq = self.texts_to_sequences(user_input)
-        res = self.model.predict(user_input_seq)[0]
-
-        # filter out predictions below a threshold
-        ERROR_THRESHOLD = 0.2
-        results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
-
-        # sort by strength of probability
-        results.sort(key=lambda x: x[1], reverse=True)
         return_list = []
-        for r in results:
-            return_list.append({"intent": self.classes[r[0]], "probability": str(r[1])})
+        user_input_seq = self.texts_to_sequences(user_input)
+        # check if all elements of user input sequential is zero or not
+        if np.all((user_input_seq[0] == 0)):
+            return_list.append({'intent': 'noanswer', 'probability': '1'})
+        else:
+            res = self.model.predict(user_input_seq)[0]
+            # filter out predictions below a threshold
+            ERROR_THRESHOLD = 0.6
+            results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+
+            # sort by strength of probability
+            results.sort(key=lambda x: x[1], reverse=True)
+
+            for r in results:
+                return_list.append({"intent": self.classes[r[0]], "probability": str(r[1])})
         return return_list
 
     def get_response(self, ints):

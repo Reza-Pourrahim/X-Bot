@@ -122,25 +122,45 @@ class XBotModel(object):
         random.shuffle(training_dataset)
         training_dataset = np.array(training_dataset)
 
+        # define vocabulary size (largest integer value)
+        # The vocabulary size is the total number of words in our vocabulary, plus one for unknown words
+        vocab_size = len(tokenizer.word_index) + 1
+
+        # Using pre-trained word embeddings
+        embeddings_index = {}
+        f = open('glove.6B.100d.txt', encoding="utf8")
+        for line in f:
+            values = line.split()
+            word = values[0]
+            coefs = np.asarray(values[1:], dtype='float32')
+            embeddings_index[word] = coefs
+        f.close()
+        if self.verbose:
+          print('Loaded %s word vectors.' % len(embeddings_index))
+
+        # create a weight matrix for words in training docs
+        embedding_matrix = np.zeros((vocab_size, 100))
+        for word, i in tokenizer.word_index.items():
+          embedding_vector = embeddings_index.get(word)
+          if embedding_vector is not None:
+            embedding_matrix[i] = embedding_vector
 
         # a list of different types of intents of responses
         classes = sorted(list(set(pattern_class)))
         # save as a pickle
         pickle.dump(classes, open('classes.pkl', 'wb'))
 
-        # define vocabulary size (largest integer value)
-        # The vocabulary size is the total number of words in our vocabulary, plus one for unknown words
-        vocab_size = len(tokenizer.word_index) + 1
+
         if self.verbose:
             print("Training Data Created!")
             print("Words : {}".format(tokenizer.word_index))
             print('Number of  Words = {}'.format(vocab_size))
             print('Maximum Length of Words in a Sentence = {}'.format(max_length))
 
-        return training_dataset, vocab_size, tokenizer
+        return training_dataset, vocab_size, tokenizer, embedding_matrix
 
 
-    def create_model(self, train_x, train_y, vocab_size=1000, output_dim=128, lstm_out=100, dropout=0.5):
+    def create_model(self, train_x, train_y, embedding_matrix, vocab_size=1000, embedding_dim=128, lstm_out=100, dropout=0.5):
         input_length = len(train_x[0])
         num_classes = len(train_y[0])
 
@@ -148,12 +168,16 @@ class XBotModel(object):
         model = Sequential()
         # The embedding layer
         model.add(layers.Embedding(input_dim=vocab_size,
-                                   output_dim=output_dim,
-                                   input_length=input_length))
+                                   output_dim=embedding_dim,
+                                   weights=[embedding_matrix],
+                                   input_length=input_length,
+                                   trainable=False))
         # The Bidirectional LSTM layer
-        model.add(layers.Bidirectional(layers.LSTM(lstm_out, dropout=dropout)))
+        model.add(layers.Bidirectional(layers.LSTM(lstm_out,
+                                                   dropout=dropout)))
         # The Dense layer
-        model.add(layers.Dense(num_classes, activation='softmax'))
+        model.add(layers.Dense(num_classes,
+                               activation='softmax'))
 
         if self.verbose:
             print(model.summary())

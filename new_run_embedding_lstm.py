@@ -118,20 +118,20 @@ data = json.loads(data_file)
 XBot_obj = XBotModel(verbose=True)
 
 # training dataset
-train_dataset, vocab_size, tokenizer = XBot_obj.prepare_train_dataset(data)
+train_dataset, vocab_size, tokenizer, embedding_matrix = XBot_obj.prepare_train_dataset(data)
 train_x = list(train_dataset[:, 0])
 train_y = list(train_dataset[:, 1])
 
 
 # create model
-model = XBot_obj.create_model(train_x, train_y, vocab_size,
-                              output_dim=20, lstm_out=15, dropout=0.5)
+model = XBot_obj.create_model(train_x, train_y, embedding_matrix, vocab_size,
+                              embedding_dim=100, lstm_out=15, dropout=0.5)
 
 
 # compile and fit the model
-mymodel = XBot_obj.compile_fit_model(model, train_x, train_y, epochs=100,
+mymodel = XBot_obj.compile_fit_model(model, train_x, train_y, epochs=200,
                                      batch_size=5,
-                                     earlystopping_patience=20,
+                                     earlystopping_patience=10,
                                      validation_split=0.3,
                                      loss='categorical_crossentropy')
 
