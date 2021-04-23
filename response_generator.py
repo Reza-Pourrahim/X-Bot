@@ -3,6 +3,8 @@ import numpy as np
 import random
 import pickle
 
+from util import record2str
+
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 
@@ -29,14 +31,21 @@ sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 
 class ResponseGenerator(object):
-    def __init__(self, data, train_x, train_y, explanation, tokenizer, model, verbose=False):
+    def __init__(self, data, train_x, train_y, tokenizer, model, explainer_data,
+                 explainer_prepared_dataset, explainer_obj, blackbox, verbose=False):
         self.data = data
         self.train_x = train_x
         self.train_y = train_y
-        self.explanation = explanation
         self.tokenizer = tokenizer
         self.model = model
+        self.explainer_data = explainer_data
+        self.explainer_obj = explainer_obj
+        self.blackbox = blackbox
         self.verbose = verbose
+
+        self.feature_names = explainer_prepared_dataset[1]
+        self.class_values = explainer_prepared_dataset[2]
+        self.numeric_columns = explainer_prepared_dataset[3]
 
         self.classes = pickle.load(open('classes.pkl', 'rb'))
 
@@ -100,7 +109,6 @@ class ResponseGenerator(object):
         user_input_words = self.clean_text(user_input)
         detokenize_words = self.detokenize(user_input_words)
 
-
         # Transforms each text in texts to a sequence of integers.
         tokenized_seq = self.tokenizer.texts_to_sequences([detokenize_words])
 
@@ -144,52 +152,99 @@ class ResponseGenerator(object):
             if i['tag'] == tag:
                 result = random.choice(i['responses'])
                 context = i['context']
+                tag_intent = i['tag']
                 break
-        return result, context
+        return result, context, tag_intent
 
     def chatbot_response(self, user_input):
         # predict the intent of the user query
         intents = self.predict_class(user_input)
         # ask for the response
-        output_response, context = self.get_response(intents)
+        output_response, context, tag_intent = self.get_response(intents)
 
-        return output_response, context[0]
+        return output_response, context[0], tag_intent
 
-    def get_explanation(self, context):
+    def get_explanation(self, context, explanation):
         if context == 'rule':
-            exp = self.explanation.rule
+            exp = explanation.rule
         elif context == 'crule':
-            exp = self.explanation.cstr()
+            exp = explanation.cstr()
         elif context == 'fidelity':
-            exp = self.explanation.fidelity
+            exp = explanation.fidelity
         elif context == 'exemplar':
-            exp = self.explanation.exemplars
+            exp = explanation.exemplars
         elif context == 'cexemplar':
-            exp = self.explanation.cexemplars
+            exp = explanation.cexemplars
         elif context == 'feature_importance':
-            exp = self.explanation.feature_importance
+            exp = explanation.feature_importance
         else:
             exp = "Nothing found!"
 
         return exp
 
     def start(self):
-        flag = True
         print("Hello, I'm X-Bot!"
-              "\nIf you want to exit, type Bye!")
-        while flag is True:
+              "\n(If you want to exit, type -1!)")
+        print("\nX-Bot: The length of the dataset is %s." % len(self.explainer_data))
+
+        flag_exit = False
+        flag_explainer = True
+        while flag_explainer:
+            print('\n')
+            print("Select an instance x (enter a row number)")
+            user_input = input()
+            try:
+                i = int(user_input)
+            except:
+                print("Please enter a valid number!")
+                continue
+            if i < 0:
+                flag_exit = True
+                print("See you later!")
+                break
+            elif i > len(self.explainer_data):
+                print("It must be less than the length of the dataset (%s)!" % len(self.explainer_data))
+                continue
+            else:
+                x = self.explainer_data[i]
+                y_val_name = self.class_values[self.blackbox.predict(x.reshape(1, -1))[0]]
+                print('\nX-Bot: Selected x is -> %s.' % record2str(x, self.feature_names, self.numeric_columns))
+                print('Blackbox(x) = { %s }' % y_val_name)
+                print('\n')
+
+                print('X-Bot: Do you want me to continue with this instance? [y/n]')
+                is_yes = input()
+                try:
+                    if is_yes == "y":
+                        explanation = self.explainer_obj.explain_instance(x, samples=1000,
+                                                                          nbr_runs=10, exemplar_num=3)
+                        flag_explainer = False
+                    else:
+                        continue
+                except:
+                    print("Please enter y or n!")
+                    continue
+
+        flag_chat = True
+        if not flag_exit:
+            print("\n")
+            print("X-Bot: Ok! How can I help you?"
+                  "\n(If you want to exit, type Bye!)")
+        while flag_chat and not flag_exit:
+
             user_input = input()
             if user_input == '':
                 print('X-Bot: Please type something!\n')
             else:
-                output_response, context = self.chatbot_response(user_input)
+                output_response, context, tag_intent = self.chatbot_response(user_input)
 
+                print("Intent: %s" % tag_intent)
                 print("X-Bot: %s" % output_response)
                 if context != "" and context != "exit":
-                    explain = self.get_explanation(context)
+                    explain = self.get_explanation(context, explanation)
                     print(explain)
                     print('\n')
                 elif context == "exit":
-                    flag = False
+                    flag_chat = False
                 else:
                     print('\n')
