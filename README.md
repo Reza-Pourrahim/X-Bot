@@ -2,7 +2,7 @@
 In this Project:
 - The Chat-Bot Model is a Deep Learning Embedding and Bidirectional LSTM Model using Keras
 - FastAPI is Used to Wrap the Chat-Bot Model to a Working API and Host a Static HTML on the Same Port
-- The App Design Developed with the Vue.js and BootstrapVue
+- The App Designed and Developed with Vue.js and BootstrapVue
 - The 'LORE' Explainer is the Re-implementation of https://github.com/riccotti/LORE
 
 A Top-level X-Bot Architecture:
