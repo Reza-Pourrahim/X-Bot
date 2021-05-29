@@ -1,2 +1,2 @@
-# LORE
- This is the re-implementation of https://github.com/riccotti/LORE
+## X-Bot : Development of a Model and Data Agnostic Chat Bot for Explaining the Decisions of Black Box Classifiers 
+The 'LORE' Explainer Used in this Project is the Re-implementation of https://github.com/riccotti/LORE
