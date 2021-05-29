@@ -6,4 +6,5 @@ In this Project:
 - The 'LORE' Explainer is the Re-implementation of https://github.com/riccotti/LORE
 
 A Top-level X-Bot Architecture:
+
 ![Capture](https://user-images.githubusercontent.com/43795622/120085751-0d649b00-c0db-11eb-85e7-b705a1c97848.PNG)
