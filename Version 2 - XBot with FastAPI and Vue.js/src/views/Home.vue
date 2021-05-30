@@ -32,6 +32,7 @@
             >
               <b-form-input
                 id="i-sepal_length"
+                size="sm"
                 v-model="form.sepal_length"
                 type="number"
                 min="0"
@@ -46,6 +47,7 @@
             >
               <b-form-input
                 id="i-sepal_width"
+                size="sm"
                 v-model="form.sepal_width"
                 type="number"
                 min="0"
@@ -60,6 +62,7 @@
             >
               <b-form-input
                 id="i-petal_length"
+                size="sm"
                 v-model="form.petal_length"
                 type="number"
                 min="0"
@@ -74,6 +77,7 @@
             >
               <b-form-input
                 id="i-petal_width"
+                size="sm"
                 v-model="form.petal_width"
                 type="number"
                 min="0"
@@ -93,11 +97,13 @@
           <b-form @submit="onSubmit_chat">
             <b-form-group
               id="ig-user_input"
-              label="Ask X-Bot:"
+              label="X-Bot:"
               label-for="i-user_input"
             >
               <b-form-input
                 id="i-user_input"
+                size="lg"
+                placeholder="Ask me your question"
                 v-model="form_chat.user_input"
                 type="text"
                 required
@@ -152,7 +158,7 @@ export default {
       this.invalid = true;
       // alert(JSON.stringify(this.form));
       axios
-        .get("/classify_iris", this.form)
+        .post("/explain_iris", this.form)
         .then((res) => {
           this.explanation = res.data;
           this.invalid = false;
