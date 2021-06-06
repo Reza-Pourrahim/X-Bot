@@ -1,6 +1,8 @@
 ## **X-Bot** : Development of a Model and Data Agnostic Chat Bot for Explaining the Decisions of Black Box Classifiers 
 In this Project:
-- The Chat-Bot Model is a Deep Learning Embedding and Bidirectional LSTM Model using Keras
+- Two Versions of Chat-Bot Model: 
+  - The First Model is a Deep Learning Embedding and Bidirectional LSTM Model using Keras
+  - The Second Model Trained with Rasa, which is a Framework for Developing AI Powered, Industrial Grade Chat-Bots.
 - FastAPI is Used to Wrap the Chat-Bot Model to a Working API and Host a Static HTML on the Same Port
 - The App Designed and Developed with Vue.js and BootstrapVue
 - The 'LORE' Explainer is the Re-implementation of https://github.com/riccotti/LORE
