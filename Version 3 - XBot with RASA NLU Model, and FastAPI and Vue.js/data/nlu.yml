@@ -1,0 +1,121 @@
+version: "2.0"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - good afternoon
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+
+- intent: why
+  examples: |
+    - What rules does it use?
+    - How does the system make this prediction?
+    - reasons
+    - factual rule
+    - give me the explanation
+    - explanation
+    - explain
+    - explain it to me
+    - explain to me
+    - why?
+    - why do you give me this explanation?
+    - how was this calculated?
+    - how is this instance given this prediction?
+    - Why is this instance given this prediction?
+    - What features of this instance leads to the system's prediction?
+
+- intent: performance
+  examples: |
+    - reliability
+    - prediction accuracy
+    - accuracy
+    - performance
+    - how about the performance?
+    - How precise are the predictions?
+    - How reliable are the predictions?
+    - How accurate are the predictions?
+    - How often does the system make mistakes?
+    - In what situations is the system likely to be incorrect?
+    - In what situations is the system likely to be correct?
+    - What are the limitations of the system?","What kind of mistakes is the system likely to make?
+    - Is the system's performance good enough for
+
+- intent: how_to_be_that
+  examples: |
+    - counterfactual rule
+    - counter factual
+    - How should this instance change to get a different prediction?
+    - How should this feature change for this instance to get a different prediction?
+    - What kind of instance gets a different prediction?
+
+- intent: feature_importance
+  examples: |
+    - How does it weigh different features?
+    - Is feature X used or not used for the predictions?
+    - What features does the system consider?
+    - top feature importance","important variable
+    - important feature
+    - feature importance
+    - top feature
+    - Which are the most important variables?
+    - give me top feature importance
+    - Does this feature influence on prediction?
+
+- intent: exemplar
+  examples: |
+    - an exemplar
+    - some exemplar
+    - similar instance
+    - exemplar
+    - give me an exemplar
+    - what about instances similar to this instance
+    - show me an instance similar to this instance
+
+- intent: counter_exemplar
+  examples: |
+    - not similar instance
+    - counter exemplar
+    - what about instances that is not similar to this instance
+    - what is the nearest neighbour that is not similar to this instance
+    - give me a counter exemplar
+
+- intent: options
+  examples: |
+    - help
+    - How can you help me?
+    - What can you do?
+    - What help you provide?
+    - How you can be helpful?
+    - What support is offered?
