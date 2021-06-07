@@ -1,7 +1,11 @@
 # gui_project
+
 <hr />
+
 # Vue.js:
+
 ## Project setup
+
 ```
 npm install
 ```
@@ -26,6 +30,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 <hr />
 # FastAPI:
+
 ```
 pip install fastapi
 ```
