@@ -19,8 +19,13 @@ from rasa.nlu.model import Interpreter
 ###################
 # files and lists #
 ###################
-pkl_filename = 'blackbox_model_files/compas_model.pkl'
-pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
+## COMPAS
+# pkl_filename = 'blackbox_model_files/compas_model.pkl'
+# pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
+
+## Iris
+pkl_filename = 'blackbox_model_files/iris_model.pkl'
+pkl_explainer_object = 'blackbox_model_files/iris_explainer_object.pkl'
 iris_class_values = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
 compas_class_values = ['High', 'Low', 'Medium']
 
@@ -51,6 +56,11 @@ options_response = ["I can give you an explanation consisting of a decision rule
 # http://127.0.0.1:8000/docs
 app = FastAPI()
 
+from fastapi.responses import FileResponse
+
+# @app.get("/app")
+# def read_index():
+#     return FileResponse("./app.html")
 
 ######################################################
 # Version 1 - Bidirectional LSTM and Embedding Model #
@@ -97,15 +107,15 @@ def explain_iris(sepal_length: int = 0, sepal_width: int = 0, petal_length: int 
     class_iris = iris_class_values[y_val]
 
     explanation = explainer_object.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
-    with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
-        json.dump(explanation, jsonfile, cls=ExplanationEncoder)
+    # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
+    #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
 
     verbatim_explanation = str(explanation)
-    f = open("verbatim_explanation.txt", "w")
+    f = open("blackbox_model_files/verbatim_explanation.txt", "w")
     f.write(verbatim_explanation)
     f.close()
 
-    return {'class': class_iris,
+    return {'class_iris': class_iris,
             }
 
 @app.get("/explain_compas")
