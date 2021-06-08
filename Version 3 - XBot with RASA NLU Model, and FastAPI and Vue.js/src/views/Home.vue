@@ -27,29 +27,47 @@
         </b-col>
       </b-row>
 
-      <b-row cols="2">
-        <b-col>
-          <label for="ig-explainer_dataset">Dataset:</label>
-          <b-form-select
-            id="ig-explainer_dataset"
-            v-model="explainer_dataset"
-            :options="explainer_dataset_options"
-          ></b-form-select>
-        </b-col>
-        <b-col>
-          <label for="ig-explainer_model">Explainer:</label>
-          <b-form-select
-            id="ig-explainer_model"
-            v-model="explainer_model"
-            :options="explainer_model_options"
-          ></b-form-select>
-        </b-col>
-      </b-row>
-      <br />
-      <b-button type="submit" variant="primary" :disabled="invalid"
-        >Go</b-button
-      >
-      <br />
+      <b-form @submit="onSubmit">
+        <b-row cols="3">
+          <b-col>
+            <b-form-group
+              id="ig-explainer_dataset"
+              label="Dataset:"
+              label-for="ig-explainer_dataset"
+            >
+              <b-form-select
+                id="ig-explainer_dataset"
+                v-model="form.explainer_dataset"
+                :options="explainer_dataset_options"
+              ></b-form-select>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              id="ig-explainer_model"
+              label="Explainer:"
+              label-for="ig-explainer_model"
+            >
+              <b-form-select
+                id="ig-explainer_model"
+                v-model="form.explainer_model"
+                :options="explainer_model_options"
+              ></b-form-select>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <br />
+            <b-button
+              type="submit"
+              variant="primary"
+              size="lg"
+              :disabled="invalid"
+              >Go</b-button
+            >
+          </b-col>
+        </b-row>
+      </b-form>
+      <br /><br /><br />
     </div>
   </b-container>
 </template>
@@ -62,8 +80,10 @@ export default {
   name: "Home",
   data() {
     return {
-      explainer_dataset: null,
-      explainer_model: null,
+      form: {
+        explainer_dataset: null,
+        explainer_model: null,
+      },
       explainer_dataset_options: [
         { value: null, text: "Please select an option" },
         { value: "compas", text: "COMPAS" },

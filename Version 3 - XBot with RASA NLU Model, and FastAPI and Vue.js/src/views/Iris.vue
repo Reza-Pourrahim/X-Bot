@@ -136,7 +136,7 @@ export default {
       axios
         .post("/explain_iris", this.form)
         .then((res) => {
-          this.explanation = res.data;
+          this.prediction = res.class_iris;
           this.invalid = false;
         })
         .catch((e) => console.log(e));
