@@ -10,15 +10,23 @@ const routes = [
     name: "Home",
     component: Home,
   },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/Chatbot.vue"),
-  // },
+  {
+    path: "/compas",
+    name: "COMPAS - Correctional Offender Management Profiling for Alternative Sanctions",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "compas" */ "../views/Compas.vue"),
+  },
+  {
+    path: "/iris",
+    name: "Iris flower data set",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "iris" */ "../views/Iris.vue"),
+  },
 ];
 
 const router = new VueRouter({
