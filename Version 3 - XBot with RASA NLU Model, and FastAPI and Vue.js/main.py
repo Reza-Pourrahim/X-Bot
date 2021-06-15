@@ -802,11 +802,3 @@ def chat_bot(user_input: str = ""):
 
     return {'tag_intent': intent,
             'xbot_explanation': xbot_explanation}
-
-
-##########################
-# Redirect to related data - model page #
-##########################
-# @app.get("/go_data_model_explainer")
-# def data_model_redirect(explainer_dataset: str = "", explainer_model: str = ""):
-
