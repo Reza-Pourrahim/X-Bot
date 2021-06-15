@@ -2,7 +2,7 @@
 
 <template>
   <b-container>
-    <div id="compas">
+    <div id="iris">
       <b-jumbotron
         bg-variant="info"
         text-variant="Secondary"
@@ -11,9 +11,42 @@
         <template #header>Iris</template>
         <template #lead> The Iris Flower dataset </template>
         <hr />
-        <br />
         <b-button v-b-toggle.sidebar-1>Input Values</b-button>
-        <b-sidebar id="sidebar-1" title="Iris" shadow>
+        <hr />
+        <b-row md="2">
+          <b-col class="position-relative">
+            <b-card
+              border-variant="secondary"
+              header="Iris Class: "
+              header-border-variant="secondary"
+              align="center"
+              v-if="class_iris"
+            >
+              <b-card-text
+                ><h4>
+                  <b-badge variant="dark">{{ class_iris.class_iris }}</b-badge>
+                </h4></b-card-text
+              >
+            </b-card>
+          </b-col>
+          <b-col>
+            <b-card
+              border-variant="secondary"
+              header="X-Bot: "
+              header-border-variant="secondary"
+              align="center"
+              v-if="explanation"
+            >
+              <b-card-text>{{ explanation.xbot_explanation }}</b-card-text>
+              <b-card-text
+                ><strong>Intent:</strong>
+                {{ explanation.tag_intent }}</b-card-text
+              >
+            </b-card>
+          </b-col>
+        </b-row>
+        <br />
+        <b-sidebar id="sidebar-1" title="Iris" backdrop shadow="true">
           <div class="px-3 py-2">
             <b-form @submit="onSubmit">
               <b-form-group
@@ -26,7 +59,7 @@
                   size="sm"
                   v-model="form.sepal_length"
                   type="number"
-                  min="0"
+                  min="0.1"
                   step="0.1"
                   required
                 ></b-form-input>
@@ -41,7 +74,7 @@
                   size="sm"
                   v-model="form.sepal_width"
                   type="number"
-                  min="0"
+                  min="0.1"
                   step="0.1"
                   required
                 ></b-form-input>
@@ -56,7 +89,7 @@
                   size="sm"
                   v-model="form.petal_length"
                   type="number"
-                  min="0"
+                  min="0.1"
                   step="0.1"
                   required
                 ></b-form-input>
@@ -71,7 +104,7 @@
                   size="sm"
                   v-model="form.petal_width"
                   type="number"
-                  min="0"
+                  min="0.1"
                   step="0.1"
                   required
                 ></b-form-input>
@@ -84,13 +117,14 @@
           </div>
         </b-sidebar>
       </b-jumbotron>
-      <b-row cols="2">
+      <b-row>
         <b-col>
           <b-form @submit="onSubmit_chat">
             <b-form-group
               id="ig-user_input"
-              label="X-Bot:"
+              label="Chat with X-Bot:"
               label-for="i-user_input"
+              v-show="can_chat"
             >
               <b-form-input
                 id="i-user_input"
@@ -99,9 +133,17 @@
                 v-model="form_chat.user_input"
                 type="text"
                 required
+                v-show="can_chat"
               ></b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="primary">Send</b-button>
+            <b-button
+              type="submit"
+              variant="primary"
+              :disabled="invalid_chat"
+              v-show="can_chat"
+              >Send</b-button
+            >
+            <b-overlay no-wrap :show="invalid_chat"></b-overlay>
           </b-form>
         </b-col>
       </b-row>
@@ -110,7 +152,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getSingleEndpoint } from "@/axiosInstance";
 
 export default {
   name: "Iris",
@@ -126,20 +168,29 @@ export default {
         petal_width: 0,
       },
       invalid: false,
+      invalid_chat: false,
+      can_chat: false,
+      explanation: null,
+      class_iris: null,
     };
   },
   methods: {
+    onSubmit_chat(event) {
+      event.preventDefault();
+      this.invalid_chat = true;
+      getSingleEndpoint(this.form_chat, "chat_bot").then((res) => {
+        this.explanation = res.data;
+        this.invalid_chat = false;
+      });
+    },
     onSubmit(event) {
       event.preventDefault();
       this.invalid = true;
-      // alert(JSON.stringify(this.form));
-      axios
-        .post("/explain_iris", this.form)
-        .then((res) => {
-          this.prediction = res.class_iris;
-          this.invalid = false;
-        })
-        .catch((e) => console.log(e));
+      getSingleEndpoint(this.form, "iris_lore").then((res) => {
+        this.class_iris = res.data;
+        this.invalid = false;
+        this.can_chat = true;
+      });
     },
   },
 };

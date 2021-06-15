@@ -23,10 +23,10 @@ from sklearn.model_selection import train_test_split
 #           Categorical explainer_dataset              #
 ##############################################
 ## german: (0 = Good, 1 = Bad)
-# dataset_name = 'explainer_dataset/german_credit.csv'
-# explainer_dataset = prepare_german_dataset(dataset_name)
-# pkl_filename = 'blackbox_model_files/german_credit_model.pkl'
-# pkl_explainer_object = 'blackbox_model_files/german_credit_explainer_object.pkl'
+dataset_name = 'explainer_dataset/german_credit.csv'
+explainer_dataset = prepare_german_dataset(dataset_name)
+pkl_filename = 'blackbox_model_files/german_credit_model.pkl'
+pkl_explainer_object = 'blackbox_model_files/german_credit_explainer_object.pkl'
 
 
 ## adult: ['<=50K', '>50K']
@@ -37,10 +37,10 @@ from sklearn.model_selection import train_test_split
 
 
 ## compas-scores-two-years: ['High', 'Low', 'Medium']
-dataset_name = 'explainer_dataset/compas-scores-two-years.csv'
-explainer_dataset = prepare_compass_dataset(dataset_name)
-pkl_filename = 'blackbox_model_files/compas_model.pkl'
-pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
+# dataset_name = 'explainer_dataset/compas-scores-two-years.csv'
+# explainer_dataset = prepare_compass_dataset(dataset_name)
+# pkl_filename = 'blackbox_model_files/compas_model.pkl'
+# pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
 
 
 dataframe, class_name = explainer_dataset
