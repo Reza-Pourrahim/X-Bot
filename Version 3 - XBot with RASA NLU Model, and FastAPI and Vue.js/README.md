@@ -1,32 +1,28 @@
 # X-Bot
 
 
-###########
-## Vue.js #
-###########
-## Project setup 
+## Vue.js 
+
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
 ```
 npm run build
 ```
 
-### Lints and fixes files
 ```
 npm run lint
 ```
 
-###########
-## FASTAPI #
-###########
+
+## FASTAPI 
+
 ```
 pip install fastapi
 ```
@@ -43,9 +39,9 @@ uvicorn main:app --reload
 http://127.0.0.1:8000/docs
 ```
 
-#########
-## RASA  #
-#########
+
+## RASA 
+
 
 ```
 pip3 install rasa[full]
