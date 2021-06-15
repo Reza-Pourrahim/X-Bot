@@ -1,6 +1,10 @@
-# gui_project
+# X-Bot
 
-## Project setup
+
+###########
+# Vue.js #
+###########
+## Project setup 
 ```
 npm install
 ```
@@ -20,5 +24,18 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+###########
+# FASTAPI #
+###########
+# pip install fastapi
+# pip install uvicorn[standard]
+# uvicorn main:app --reload
+# http://127.0.0.1:8000/docs
+
+#########
+# RASA  #
+#########
+# pip3 install rasa[full]
+# rasa init
+# rasa train
+# rasa shell
