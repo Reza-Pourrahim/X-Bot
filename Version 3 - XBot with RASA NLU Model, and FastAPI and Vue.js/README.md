@@ -2,7 +2,7 @@
 
 
 ###########
-# Vue.js #
+## Vue.js #
 ###########
 ## Project setup 
 ```
@@ -25,17 +25,36 @@ npm run lint
 ```
 
 ###########
-# FASTAPI #
+## FASTAPI #
 ###########
-# pip install fastapi
-# pip install uvicorn[standard]
-# uvicorn main:app --reload
-# http://127.0.0.1:8000/docs
+```
+pip install fastapi
+```
+
+```
+pip install uvicorn[standard]
+```
+
+```
+uvicorn main:app --reload
+```
+
+```
+http://127.0.0.1:8000/docs
+```
 
 #########
-# RASA  #
+## RASA  #
 #########
-# pip3 install rasa[full]
-# rasa init
-# rasa train
-# rasa shell
+
+```
+pip3 install rasa[full]
+```
+
+```
+rasa init
+```
+
+```
+rasa train
+```
