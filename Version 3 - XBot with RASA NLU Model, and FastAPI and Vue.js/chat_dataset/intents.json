@@ -1,5 +1,3 @@
-         "context": [""]
-        },
 {"intents": [
         {"tag": "greeting",
          "patterns": ["Ciao", "Buongiorno", "Hi", "Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
@@ -24,6 +22,8 @@
         {"tag": "options",
          "patterns": ["help","How can you help me?", "What can you do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
          "responses": ["I can give you an explanation consisting of a decision rule, explaining the factual reasons of the decision, and a set of counterfactuals, suggesting the changes in the instance features that would lead to a different outcome! Furthermore, I can Say you the most important feature, bring to you some exemplars, and some counter exemplar to clarify it more!"],
+		 "context": [""]
+        },
         {"tag": "performance",
          "patterns": ["reliability","prediction accuracy","accuracy","performance","how about the performance?","How precise are the predictions?","How reliable are the predictions?","How accurate are the predictions?","How often does the system make mistakes?","In what situations is the system likely to be incorrect?","In what situations is the system likely to be correct?","What are the limitations of the system?","What kind of mistakes is the system likely to make?","Is the system's performance good enough for..."],
          "responses": ["The fidelity is: "],
