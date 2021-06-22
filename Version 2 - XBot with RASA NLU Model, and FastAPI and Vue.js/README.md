@@ -1,5 +1,10 @@
 # X-Bot
 
+- The following command will install the packages according to the configuration file requirements.txt
+
+```
+pip install -r requirements.txt
+```
 
 ## Vue.js 
 
