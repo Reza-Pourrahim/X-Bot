@@ -47,14 +47,14 @@ const routes = [
       import(/* webpackChunkName: "wine_lore" */ "../views/Wine.vue"),
   },
   {
-    path: "/german_lore",
+    path: "/german_credit_lore",
     name: "The Statlog (German Credit Data) Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(
-        /* webpackChunkName: "german_lore" */ "../views/German_credit.vue"
+        /* webpackChunkName: "german_credit_lore" */ "../views/German_credit.vue"
       ),
   },
 ];
