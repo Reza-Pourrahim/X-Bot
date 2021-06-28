@@ -128,10 +128,10 @@ export default {
       explainer_model_options: [
         { value: null, text: "Please select an option" },
         { value: "lore", text: "LORE - Local Rule-Based Explanations" },
-        {
-          value: "lime",
-          text: "LIME - Local Interpretable Model-Agnostic Explanations (not implemented yet)",
-        },
+        // {
+        //   value: "lime",
+        //   text: "LIME - Local Interpretable Model-Agnostic Explanations (not implemented yet)",
+        // },
       ],
     };
   },

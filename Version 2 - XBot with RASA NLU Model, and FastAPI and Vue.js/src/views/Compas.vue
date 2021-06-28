@@ -67,7 +67,7 @@
 
               <b-form-group
                 id="ig-priors_count"
-                label="Number of Priors Arrests:"
+                label="Number of Priors Arrests: (priors_count)"
                 label-for="i-priors_count"
               >
                 <b-form-input
@@ -99,7 +99,7 @@
 
               <b-form-group
                 id="ig-is_recid"
-                label="Is Recidivist:"
+                label="Is Recidivist: (is_recid>0.5 => Yes, is_recid<0.5 => No)"
                 label-for="i-is_recid"
               >
                 <b-form-select
@@ -114,7 +114,7 @@
 
               <b-form-group
                 id="ig-is_violent_recid"
-                label="Is Violent Recidivist:"
+                label="Is Violent Recidivist: (is_violent_recid>0.5 => Yes, is_violent_recid<0.5 => No)"
                 label-for="i-is_violent_recid"
               >
                 <b-form-select
@@ -129,7 +129,7 @@
 
               <b-form-group
                 id="ig-two_year_recid"
-                label="Has Recidivated in Two Years:"
+                label="Has Recidivated in Two Years: (two_year_recid>0.5 => Yes, two_year_recid<0.5 => No)"
                 label-for="i-two_year_recid"
               >
                 <b-form-select
