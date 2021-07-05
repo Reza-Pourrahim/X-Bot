@@ -14,7 +14,11 @@
           known as "Census Income" dataset.
         </template>
         <hr />
-        <b-button v-b-toggle.sidebar-1>Input Values</b-button>
+        Click on this button to select the Model to explain and insert the
+        Values of the Adult Income Features to predict its Class:
+        <br />
+        <br />
+        <b-button variant="success" v-b-toggle.sidebar-1>Input Values</b-button>
         <hr />
         <b-row md="2">
           <b-col class="position-relative">
@@ -30,8 +34,14 @@
                   <b-badge variant="dark">{{
                     class_adult.class_adult
                   }}</b-badge>
-                </h4></b-card-text
-              >
+                </h4>
+                <br />
+                With the Probability of:
+                <br />
+                <h5>
+                  <b-badge variant="dark">{{ class_adult.class_prob }}</b-badge>
+                </h5>
+              </b-card-text>
             </b-card>
           </b-col>
           <b-col>
@@ -52,8 +62,23 @@
         </b-row>
         <br />
         <b-sidebar id="sidebar-1" title="Adult" backdrop shadow="true">
-          <div class="px-3 py-2">
+          <div class="px-3 py-2 text-left">
             <b-form @submit="onSubmit">
+              <b-form-group
+                id="ig-explainer_model"
+                label="Model:"
+                label-for="ig-explainer_model"
+              >
+                <b-form-radio-group
+                  id="ig-explainer_model"
+                  v-model="form.model_to_explain"
+                  :options="model_to_explain_options"
+                  required
+                ></b-form-radio-group>
+              </b-form-group>
+              <hr />
+              <hr />
+              <br />
               <b-form-group id="ig-age" label="Age:" label-for="i-age">
                 <b-form-input
                   id="i-age"
@@ -65,6 +90,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-capital_gain"
@@ -81,6 +108,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-capital_loss"
@@ -97,6 +126,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-hours_per_week"
@@ -113,6 +144,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-workclass"
@@ -128,6 +161,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-education"
@@ -143,6 +178,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-marital_status"
@@ -158,6 +195,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-occupation"
@@ -173,6 +212,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-relationship"
@@ -188,6 +229,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group id="ig-race" label="Race:" label-for="i-race">
                 <b-form-select
@@ -199,6 +242,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group id="ig-sex" label="Sex:" label-for="i-sex">
                 <b-form-select
@@ -210,6 +255,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-native_country"
@@ -225,6 +272,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <br />
+              <hr />
 
               <b-button type="submit" variant="primary" :disabled="invalid"
                 >Predict</b-button
@@ -279,6 +328,7 @@ export default {
         user_input: "",
       },
       form: {
+        model_to_explain: null,
         age: 17,
         capital_gain: 0,
         capital_loss: 0,
@@ -417,6 +467,18 @@ export default {
         { value: "United-States", text: "United-States" },
         { value: "Vietnam", text: "Vietnam" },
         { value: "Yugoslavia", text: "Yugoslavia" },
+      ],
+      model_to_explain_options: [
+        {
+          value: "GradientBoostingClassifier",
+          text: "Gradient Boosting Classifier",
+        },
+        { value: "RandomForestClassifier", text: "Random Forest Classifier" },
+        {
+          value: "SGDClassifier",
+          text: "Stochastic Gradient Descent Classifier",
+        },
+        { value: "SVC", text: "Support Vector Machine Classifier" },
       ],
       invalid: false,
       invalid_chat: false,

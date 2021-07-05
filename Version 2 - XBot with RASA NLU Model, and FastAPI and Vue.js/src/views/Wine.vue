@@ -11,7 +11,11 @@
         <template #header>Wine</template>
         <template #lead> The Wine Quality Dataset </template>
         <hr />
-        <b-button v-b-toggle.sidebar-1>Input Values</b-button>
+        Click on this button to select the Model to explain and insert the
+        Values of the Wine Features to predict its Class:
+        <br />
+        <br />
+        <b-button variant="success" v-b-toggle.sidebar-1>Input Values</b-button>
         <hr />
         <b-row md="2">
           <b-col class="position-relative">
@@ -25,7 +29,12 @@
               <b-card-text
                 ><h4>
                   <b-badge variant="dark">{{ class_wine.class_wine }}</b-badge>
-                </h4></b-card-text
+                </h4><br />
+                With the Probability of:
+                <br />
+                <h5>
+                  <b-badge variant="dark">{{ class_wine.class_prob }}</b-badge>
+                </h5></b-card-text
               >
             </b-card>
           </b-col>
@@ -47,8 +56,23 @@
         </b-row>
         <br />
         <b-sidebar id="sidebar-1" title="wine" backdrop shadow="true">
-          <div class="px-3 py-2">
+          <div class="px-3 py-2 text-left">
             <b-form @submit="onSubmit">
+              <b-form-group
+                id="ig-explainer_model"
+                label="Model:"
+                label-for="ig-explainer_model"
+              >
+                <b-form-radio-group
+                  id="ig-explainer_model"
+                  v-model="form.model_to_explain"
+                  :options="model_to_explain_options"
+                  required
+                ></b-form-radio-group>
+              </b-form-group>
+              <hr />
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Alcohol"
                 label="Alcohol:"
@@ -64,6 +88,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Malic_acid"
                 label="Malic acid:"
@@ -79,6 +105,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group id="ig-Ash" label="Ash:" label-for="i-Ash">
                 <b-form-input
                   id="i-Ash"
@@ -90,6 +118,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Acl"
                 label="Acl (Alcalinity of ash):"
@@ -105,6 +135,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group id="ig-Mg" label="Mg (Magnesium):" label-for="i-Mg">
                 <b-form-input
                   id="i-Mg"
@@ -116,6 +148,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Phenols"
                 label="Phenols (Total phenols):"
@@ -131,6 +165,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Flavanoids"
                 label="Flavanoids:"
@@ -146,6 +182,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Nonflavanoid_phenols"
                 label="Nonflavanoid phenols:"
@@ -161,6 +199,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Proanth"
                 label="Proanthocyanins (Proanth):"
@@ -176,6 +216,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Color_int"
                 label="Color intensity (Color_int):"
@@ -191,6 +233,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group id="ig-Hue" label="Hue:" label-for="i-Hue">
                 <b-form-input
                   id="i-Hue"
@@ -202,6 +246,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-OD"
                 label="OD280/OD315 of diluted wines (OD):"
@@ -217,6 +263,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
               <b-form-group
                 id="ig-Proline"
                 label="Proline:"
@@ -232,6 +280,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <br />
+              <hr />
               <b-button type="submit" variant="primary" :disabled="invalid"
                 >Predict</b-button
               >
@@ -285,6 +335,7 @@ export default {
         user_input: "",
       },
       form: {
+        model_to_explain: null,
         Alcohol: 0,
         Malic_acid: 0,
         Ash: 0,
@@ -299,6 +350,18 @@ export default {
         OD: 0,
         Proline: 0,
       },
+      model_to_explain_options: [
+        {
+          value: "GradientBoostingClassifier",
+          text: "Gradient Boosting Classifier",
+        },
+        { value: "RandomForestClassifier", text: "Random Forest Classifier" },
+        {
+          value: "SGDClassifier",
+          text: "Stochastic Gradient Descent Classifier",
+        },
+        { value: "SVC", text: "Support Vector Machine Classifier" },
+      ],
       invalid: false,
       invalid_chat: false,
       can_chat: false,

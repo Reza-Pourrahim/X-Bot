@@ -13,7 +13,11 @@
           Correctional Offender Management Profiling for Alternative Sanctions
         </template>
         <hr />
-        <b-button v-b-toggle.sidebar-1>Input Values</b-button>
+        Click on this button to select the Model to explain and insert the
+        Values of the COMPAS Features to predict its Class:
+        <br />
+        <br />
+        <b-button variant="success" v-b-toggle.sidebar-1>Input Values</b-button>
         <hr />
         <b-row md="2">
           <b-col class="position-relative">
@@ -29,7 +33,12 @@
                   <b-badge variant="dark">{{
                     class_compas.class_compas
                   }}</b-badge>
-                </h4></b-card-text
+                </h4><br />
+                With the Probability of:
+                <br />
+                <h5>
+                  <b-badge variant="dark">{{ class_compas.class_prob }}</b-badge>
+                </h5></b-card-text
               >
             </b-card>
           </b-col>
@@ -51,8 +60,23 @@
         </b-row>
         <br />
         <b-sidebar id="sidebar-1" title="COMPAS" backdrop shadow="true">
-          <div class="px-3 py-2">
+          <div class="px-3 py-2 text-left">
             <b-form @submit="onSubmit">
+              <b-form-group
+                id="ig-explainer_model"
+                label="Model:"
+                label-for="ig-explainer_model"
+              >
+                <b-form-radio-group
+                  id="ig-explainer_model"
+                  v-model="form.model_to_explain"
+                  :options="model_to_explain_options"
+                  required
+                ></b-form-radio-group>
+              </b-form-group>
+              <hr />
+              <hr />
+              <br />
               <b-form-group id="ig-age" label="Age:" label-for="i-age">
                 <b-form-input
                   id="i-age"
@@ -64,6 +88,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-priors_count"
@@ -80,6 +106,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
+              <hr />
+              <br />
 
               <b-form-group
                 id="ig-days_b_screening_arrest"
@@ -96,7 +124,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-is_recid"
                 label="Is Recidivist: (is_recid>0.5 => Yes, is_recid<0.5 => No)"
@@ -111,7 +140,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-is_violent_recid"
                 label="Is Violent Recidivist: (is_violent_recid>0.5 => Yes, is_violent_recid<0.5 => No)"
@@ -126,7 +156,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-two_year_recid"
                 label="Has Recidivated in Two Years: (two_year_recid>0.5 => Yes, two_year_recid<0.5 => No)"
@@ -141,7 +172,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-length_of_stay"
                 label="Length of Stay in Days:"
@@ -157,7 +189,8 @@
                   required
                 ></b-form-input>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-age_cat"
                 label="Age Category:"
@@ -172,7 +205,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group id="ig-sex" label="Sex:" label-for="i-sex">
                 <b-form-select
                   id="i-sex"
@@ -183,7 +217,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group id="ig-race" label="Race:" label-for="i-race">
                 <b-form-select
                   id="i-race"
@@ -194,7 +229,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
-
+              <hr />
+              <br />
               <b-form-group
                 id="ig-c_charge_degree"
                 label="Felony or Misdemeanor Charge (Charge Degree):"
@@ -209,6 +245,8 @@
                   required
                 ></b-form-select>
               </b-form-group>
+              <br />
+              <hr />
               <b-button type="submit" variant="primary" :disabled="invalid"
                 >Predict</b-button
               >
@@ -262,6 +300,7 @@ export default {
         user_input: "",
       },
       form: {
+        model_to_explain: null,
         age: 18,
         priors_count: 0,
         days_b_screening_arrest: 0,
@@ -313,6 +352,18 @@ export default {
         { value: null, text: "Please select an option" },
         { value: "F", text: "F" },
         { value: "M", text: "M" },
+      ],
+      model_to_explain_options: [
+        {
+          value: "GradientBoostingClassifier",
+          text: "Gradient Boosting Classifier",
+        },
+        { value: "RandomForestClassifier", text: "Random Forest Classifier" },
+        {
+          value: "SGDClassifier",
+          text: "Stochastic Gradient Descent Classifier",
+        },
+        { value: "SVC", text: "Support Vector Machine Classifier" },
       ],
       invalid: false,
       invalid_chat: false,

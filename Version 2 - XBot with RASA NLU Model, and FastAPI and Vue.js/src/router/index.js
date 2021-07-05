@@ -11,50 +11,48 @@ const routes = [
     component: Home,
   },
   {
-    path: "/compas_lore",
+    path: "/compas",
     name: "The COMPAS (Correctional Offender Management Profiling for Alternative Sanctions Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "compas_lore" */ "../views/Compas.vue"),
+      import(/* webpackChunkName: "compas" */ "../views/Compas.vue"),
   },
   {
-    path: "/iris_lore",
+    path: "/iris",
     name: "Iris Flower Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "iris_lore" */ "../views/Iris.vue"),
+    component: () => import(/* webpackChunkName: "iris" */ "../views/Iris.vue"),
   },
   {
-    path: "/adult_lore",
+    path: "/adult",
     name: "The Adult Income Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "adult_lore" */ "../views/Adult.vue"),
+      import(/* webpackChunkName: "adult" */ "../views/Adult.vue"),
   },
   {
-    path: "/wine_lore",
+    path: "/wine",
     name: "The Wine Quality Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "wine_lore" */ "../views/Wine.vue"),
+    component: () => import(/* webpackChunkName: "wine" */ "../views/Wine.vue"),
   },
   {
-    path: "/german_credit_lore",
+    path: "/german_credit",
     name: "The Statlog (German Credit Data) Dataset",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(
-        /* webpackChunkName: "german_credit_lore" */ "../views/German_credit.vue"
+        /* webpackChunkName: "german_credit" */ "../views/German_credit.vue"
       ),
   },
 ];
