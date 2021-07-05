@@ -24,61 +24,46 @@ from rasa.nlu.model import Interpreter
 ##########
 # Adult #
 ##########
-pkl_filename_adult = 'blackbox_model_files/adult_model.pkl'
 pkl_explainer_object_adult = 'blackbox_model_files/adult_explainer_object.pkl'
 adult_class_values = ['<=50K', '>50K']
 # Load the Model back from file - adult
-with open(pkl_filename_adult, 'rb') as file:
-    blackbox_adult = pickle.load(file)
 with open(pkl_explainer_object_adult, 'rb') as f:
     explainer_object_adult = pickle.load(f)
 
 ##########
 # COMPAS #
 ##########
-pkl_filename_compas = 'blackbox_model_files/compas_model.pkl'
 pkl_explainer_object_compas = 'blackbox_model_files/compas_explainer_object.pkl'
 compas_class_values = ['High', 'Low', 'Medium']
 # Load the Model back from file - compas
-with open(pkl_filename_compas, 'rb') as file:
-    blackbox_compas = pickle.load(file)
 with open(pkl_explainer_object_compas, 'rb') as f:
     explainer_object_compas = pickle.load(f)
 
 ########
 # Iris #
 ########
-pkl_filename_iris = 'blackbox_model_files/iris_model.pkl'
 pkl_explainer_object_iris = 'blackbox_model_files/iris_explainer_object.pkl'
 iris_class_values = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
 # Load the Model back from file - iris
-with open(pkl_filename_iris, 'rb') as file:
-    blackbox_iris = pickle.load(file)
 with open(pkl_explainer_object_iris, 'rb') as f:
     explainer_object_iris = pickle.load(f)
 
 #################
 # German Credit #
 #################
-pkl_filename_german = 'blackbox_model_files/german_credit_model.pkl'
 pkl_explainer_object_german = 'blackbox_model_files/german_credit_explainer_object.pkl'
 # (0 = Good, 1 = Bad)
 german_class_values = ['Good', 'Bad']
 # Load the Model back from file - iris
-with open(pkl_filename_german, 'rb') as file:
-    blackbox_german = pickle.load(file)
 with open(pkl_explainer_object_german, 'rb') as f:
     explainer_object_german = pickle.load(f)
 
 ########
 # Wine #
 ########
-pkl_filename_wine = 'blackbox_model_files/wine_model.pkl'
 pkl_explainer_object_wine = 'blackbox_model_files/wine_explainer_object.pkl'
 wine_class_values = [1, 2, 3]
 # Load the Model back from file - wine
-with open(pkl_filename_wine, 'rb') as file:
-    blackbox_wine = pickle.load(file)
 with open(pkl_explainer_object_wine, 'rb') as f:
     explainer_object_wine = pickle.load(f)
 
@@ -155,18 +140,8 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/iris_lore")
-def explain_iris(sepal_length: int = 0, sepal_width: int = 0, petal_length: int = 0, petal_width: int = 0):
-    x = [sepal_length, sepal_width, petal_length, petal_width]
-    x = np.array(x)
-    y_val = blackbox_iris.predict(x.reshape(1, -1))[0]
-    class_iris = iris_class_values[y_val]
-
-    explanation = explainer_object_iris.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
-
-    #############
+def write_explanation_to_file(explanation):
     # if needed #
-    #############
     # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
     #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
 
@@ -175,12 +150,106 @@ def explain_iris(sepal_length: int = 0, sepal_width: int = 0, petal_length: int 
     f.write(verbatim_explanation)
     f.close()
 
+
+def predict_class(x, blackbox, class_values):
+    y_val = blackbox.predict(x.reshape(1, -1))[0]
+    res = class_values[y_val]
+    return res
+
+
+def load_blackbox_adult(model_to_explain):
+    if model_to_explain == 'RandomForestClassifier':
+        file_name = 'blackbox_model_files/adult_RandomForestClassifier.pkl'
+    elif model_to_explain == 'SGDClassifier':
+        file_name = 'blackbox_model_files/adult_SGDClassifier.pkl'
+    elif model_to_explain == 'SVC':
+        file_name = 'blackbox_model_files/adult_SVC.pkl'
+    elif model_to_explain == 'GradientBoostingClassifier':
+        file_name = 'blackbox_model_files/adult_GradientBoostingClassifier.pkl'
+    with open(file_name, 'rb') as file:
+        blackbox = pickle.load(file)
+    return blackbox
+
+
+def load_blackbox_compas(model_to_explain):
+    if model_to_explain == 'RandomForestClassifier':
+        file_name = 'blackbox_model_files/compas_RandomForestClassifier.pkl'
+    elif model_to_explain == 'SGDClassifier':
+        file_name = 'blackbox_model_files/compas_SGDClassifier.pkl'
+    elif model_to_explain == 'SVC':
+        file_name = 'blackbox_model_files/compas_SVC.pkl'
+    elif model_to_explain == 'GradientBoostingClassifier':
+        file_name = 'blackbox_model_files/compas_GradientBoostingClassifier.pkl'
+    with open(file_name, 'rb') as file:
+        blackbox = pickle.load(file)
+    return blackbox
+
+
+
+def load_blackbox_german_credit(model_to_explain):
+    if model_to_explain == 'RandomForestClassifier':
+        file_name = 'blackbox_model_files/german_credit_RandomForestClassifier.pkl'
+    elif model_to_explain == 'SGDClassifier':
+        file_name = 'blackbox_model_files/german_credit_SGDClassifier.pkl'
+    elif model_to_explain == 'SVC':
+        file_name = 'blackbox_model_files/german_credit_SVC.pkl'
+    elif model_to_explain == 'GradientBoostingClassifier':
+        file_name = 'blackbox_model_files/german_credit_GradientBoostingClassifier.pkl'
+    with open(file_name, 'rb') as file:
+        blackbox = pickle.load(file)
+    return blackbox
+
+
+def load_blackbox_iris(model_to_explain):
+    if model_to_explain == 'RandomForestClassifier':
+        file_name = 'blackbox_model_files/iris_RandomForestClassifier.pkl'
+    elif model_to_explain == 'SGDClassifier':
+        file_name = 'blackbox_model_files/iris_SGDClassifier.pkl'
+    elif model_to_explain == 'SVC':
+        file_name = 'blackbox_model_files/iris_SVC.pkl'
+    elif model_to_explain == 'GradientBoostingClassifier':
+        file_name = 'blackbox_model_files/iris_GradientBoostingClassifier.pkl'
+    with open(file_name, 'rb') as file:
+        blackbox = pickle.load(file)
+    return blackbox
+
+
+def load_blackbox_wine(model_to_explain):
+    if model_to_explain == 'RandomForestClassifier':
+        file_name = 'blackbox_model_files/wine_RandomForestClassifier.pkl'
+    elif model_to_explain == 'SGDClassifier':
+        file_name = 'blackbox_model_files/wine_SGDClassifier.pkl'
+    elif model_to_explain == 'SVC':
+        file_name = 'blackbox_model_files/wine_SVC.pkl'
+    elif model_to_explain == 'GradientBoostingClassifier':
+        file_name = 'blackbox_model_files/wine_GradientBoostingClassifier.pkl'
+    with open(file_name, 'rb') as file:
+        blackbox = pickle.load(file)
+    return blackbox
+
+
+@app.get("/iris_lore")
+def explain_iris(model_to_explain: str = 'RandomForestClassifier', sepal_length: int = 0, sepal_width: int = 0,
+                 petal_length: int = 0, petal_width: int = 0):
+    x = [sepal_length, sepal_width, petal_length, petal_width]
+    x = np.array(x)
+
+    blackbox = load_blackbox_iris(model_to_explain)
+
+    class_iris = predict_class(x, blackbox, iris_class_values)
+    class_prob = max(blackbox.predict_proba(x.reshape(1, -1))[0])
+
+    explanation = explainer_object_iris.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
+
+    write_explanation_to_file(explanation)
+
     return {'class_iris': class_iris,
+            'class_prob': class_prob
             }
 
 
 @app.get("/german_lore")
-def explain_german(duration_in_month: int = 0, credit_amount: int = 0, installment_as_income_perc: int = 0,
+def explain_german(model_to_explain: str = 'RandomForestClassifier', duration_in_month: int = 0, credit_amount: int = 0, installment_as_income_perc: int = 0,
                    present_res_since: int = 0, age: int = 0, credits_this_bank: int = 0,
                    people_under_maintenance: int = 0, account_check_status: str = '0 <= ... < 200 DM',
                    credit_history: str = 'all credits at this bank paid back duly',
@@ -328,28 +397,23 @@ def explain_german(duration_in_month: int = 0, credit_amount: int = 0, installme
         x.extend([0, 1])
 
     x = np.array(x)
-    y_val = blackbox_german.predict(x.reshape(1, -1))[0]
-    class_german = german_class_values[y_val]
+
+    blackbox = load_blackbox_german_credit(model_to_explain)
+
+    class_german = predict_class(x, blackbox, german_class_values)
+    class_prob = max(blackbox.predict_proba(x.reshape(1, -1))[0])
 
     explanation = explainer_object_german.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
 
-    #############
-    # if needed #
-    #############
-    # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
-    #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
-
-    verbatim_explanation = str(explanation)
-    f = open("blackbox_model_files/verbatim_explanation.txt", "w")
-    f.write(verbatim_explanation)
-    f.close()
+    write_explanation_to_file(explanation)
 
     return {'class_german': class_german,
+            'class_prob': class_prob,
             }
 
 
 @app.get("/compas_lore")
-def explain_compas(age: int = 18, priors_count: int = 0, days_b_screening_arrest: int = 0, is_recid: int = 0,
+def explain_compas(model_to_explain: str = 'RandomForestClassifier', age: int = 18, priors_count: int = 0, days_b_screening_arrest: int = 0, is_recid: int = 0,
                    is_violent_recid: int = 0, two_year_recid: int = 0, length_of_stay: int = 0,
                    age_cat: str = 'Less than 25', sex: str = 'Female', race: str = 'Caucasian',
                    c_charge_degree: str = 'M'):
@@ -385,28 +449,23 @@ def explain_compas(age: int = 18, priors_count: int = 0, days_b_screening_arrest
         x.extend([0, 1])
 
     x = np.array(x)
-    y_val = blackbox_compas.predict(x.reshape(1, -1))[0]
-    class_compas = compas_class_values[y_val]
+
+    blackbox = load_blackbox_compas(model_to_explain)
+
+    class_compas = predict_class(x, blackbox, compas_class_values)
+    class_prob = max(blackbox.predict_proba(x.reshape(1, -1))[0])
 
     explanation = explainer_object_compas.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
 
-    #############
-    # if needed #
-    #############
-    # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
-    #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
-
-    verbatim_explanation = str(explanation)
-    f = open("blackbox_model_files/verbatim_explanation.txt", "w")
-    f.write(verbatim_explanation)
-    f.close()
+    write_explanation_to_file(explanation)
 
     return {'class_compas': class_compas,
+            'class_prob': class_prob,
             }
 
 
 @app.get("/adult_lore")
-def explain_adult(age: int = 17, capital_gain: int = 0, capital_loss: int = 0, hours_per_week: int = 0,
+def explain_adult(model_to_explain: str = 'RandomForestClassifier', age: int = 17, capital_gain: int = 0, capital_loss: int = 0, hours_per_week: int = 0,
                    workclass: str = '', education: str = '', marital_status: str = '', occupation: str = '',
                     relationship: str = '', race: str = '', sex: str = '', native_country: str = ''):
     x = [age, capital_gain, capital_loss, hours_per_week]
@@ -661,28 +720,23 @@ def explain_adult(age: int = 17, capital_gain: int = 0, capital_loss: int = 0, h
                   0, 0, 0, 0, 0, 1])
 
     x = np.array(x)
-    y_val = blackbox_adult.predict(x.reshape(1, -1))[0]
-    class_adult = adult_class_values[y_val]
+
+    blackbox = load_blackbox_adult(model_to_explain)
+
+    class_adult = predict_class(x, blackbox, adult_class_values)
+    class_prob = max(blackbox.predict_proba(x.reshape(1, -1))[0])
 
     explanation = explainer_object_adult.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
 
-    #############
-    # if needed #
-    #############
-    # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
-    #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
-
-    verbatim_explanation = str(explanation)
-    f = open("blackbox_model_files/verbatim_explanation.txt", "w")
-    f.write(verbatim_explanation)
-    f.close()
+    write_explanation_to_file(explanation)
 
     return {'class_adult': class_adult,
+            'class_prob': class_prob,
             }
 
 
 @app.get("/wine_lore")
-def explain_wine(Alcohol: int = 0, Malic_acid: int = 0, Ash: int = 0, Acl: int = 0, Mg: int = 0,
+def explain_wine(model_to_explain: str = 'RandomForestClassifier', Alcohol: int = 0, Malic_acid: int = 0, Ash: int = 0, Acl: int = 0, Mg: int = 0,
                  Phenols: int = 0, Flavanoids: int = 0, Nonflavanoid_phenols: int = 0, Proanth: int = 0,
                  Color_int: int = 0, Hue: int = 0, OD: int = 0, Proline: int = 0):
     x = [Alcohol,
@@ -699,23 +753,18 @@ def explain_wine(Alcohol: int = 0, Malic_acid: int = 0, Ash: int = 0, Acl: int =
         OD,
         Proline]
     x = np.array(x)
-    y_val = blackbox_wine.predict(x.reshape(1, -1))[0]
-    class_wine = wine_class_values[y_val]
+
+    blackbox = load_blackbox_wine(model_to_explain)
+
+    class_wine = predict_class(x, blackbox, wine_class_values)
+    class_prob = max(blackbox.predict_proba(x.reshape(1, -1))[0])
 
     explanation = explainer_object_wine.explain_instance(x, samples=1000, nbr_runs=10, exemplar_num=3)
 
-    #############
-    # if needed #
-    #############
-    # with open('blackbox_model_files/explanation.json', 'w') as jsonfile:
-    #     json.dump(explanation, jsonfile, cls=ExplanationEncoder)
-
-    verbatim_explanation = str(explanation)
-    f = open("blackbox_model_files/verbatim_explanation.txt", "w")
-    f.write(verbatim_explanation)
-    f.close()
+    write_explanation_to_file(explanation)
 
     return {'class_wine': class_wine,
+            'class_prob': class_prob,
             }
 
 
