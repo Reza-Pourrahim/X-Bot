@@ -1,0 +1,53 @@
+version: '2.0'
+config:
+  store_entities_as_slots: true
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+intents:
+- greet:
+    use_entities: true
+- goodbye:
+    use_entities: true
+- bot_challenge:
+    use_entities: true
+- why:
+    use_entities: true
+- performance:
+    use_entities: true
+- how_to_be_that:
+    use_entities: true
+- feature_importance:
+    use_entities: true
+- exemplar:
+    use_entities: true
+- counter_exemplar:
+    use_entities: true
+- options:
+    use_entities: true
+entities: []
+slots: {}
+responses:
+  utter_greet:
+  - text: Hey! How are you?
+  utter_goodbye:
+  - text: Bye
+  utter_iamabot:
+  - text: Sorry, can't understand you. Please give me more information!
+  utter_why:
+  - text: 'The factual rules are: '
+  utter_performance:
+  - text: 'The fidelity is: '
+  utter_how_to_be_that:
+  - text: 'The counterfactual factual rules are: '
+  utter_feature_importance:
+  - text: 'The most important features are: '
+  utter_exemplar:
+  - text: 'The exemplars are: '
+  utter_counter_exemplar:
+  - text: 'The counter exemplars are: '
+  utter_options:
+  - text: I can give you an explanation consisting of a decision rule, explaining the factual reasons of the decision, and a set of counterfactuals, suggesting the changes in the instance features that would lead to a different outcome! Furthermore, I can Say you the most important feature, bring to you some exemplars, and some counter exemplar to clarify it more!
+actions: []
+forms: {}
+e2e_actions: []
