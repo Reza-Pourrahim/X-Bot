@@ -9,5 +9,5 @@ In this Project:
 
 A Top-level X-Bot Architecture:
 
-![Capture](![xbot_architecture](https://user-images.githubusercontent.com/43795622/130700428-9738ce4c-9643-405c-83c7-ae5828da580d.PNG)
-)
+![Capture](https://user-images.githubusercontent.com/43795622/130700428-9738ce4c-9643-405c-83c7-ae5828da580d.PNG)
+
