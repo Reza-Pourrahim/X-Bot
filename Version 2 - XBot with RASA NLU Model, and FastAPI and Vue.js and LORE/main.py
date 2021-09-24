@@ -10,9 +10,6 @@ from explanation import ExplanationEncoder
 import numpy as np
 import pickle
 
-# Version 1 - Bidirectional LSTM and Embedding Model
-# import tensorflow as tf
-# from response_generator import ResponseGenerator
 
 # Version 2 - RASA Model
 from rasa.nlu.model import Interpreter
@@ -22,7 +19,7 @@ from rasa.nlu.model import Interpreter
 # files and lists #
 ###################
 ##########
-# Adult #
+# Adult  #
 ##########
 pkl_explainer_object_adult = 'blackbox_model_files/adult_explainer_object.pkl'
 adult_class_values = ['<=50K', '>50K']
@@ -98,29 +95,6 @@ app.add_middleware(
 
 
 from fastapi.responses import FileResponse
-
-# @app.get("/app")
-# def read_index():
-#     return FileResponse("./app.html")
-
-######################################################
-# Version 1 - Bidirectional LSTM and Embedding Model #
-######################################################
-# Load Chat_bot Files
-# data_file = open('chat_dataset/intents.json').read()
-# data = json.loads(data_file)
-#
-# xbot_trained_model = tf.keras.models.load_model('chatbot_model_files/best_xbot_model.h5')
-# with open('chatbot_model_files/tokenizer.pkl', 'rb') as handle:
-#     tokenizer = pickle.load(handle)
-# embedding_matrix = np.load('chatbot_model_files/embedding_matrix.npy')
-# training_dataset = np.load('chatbot_model_files/training_dataset.npy', allow_pickle=True)
-#
-# train_x = list(training_dataset[:, 0])
-# train_y = list(training_dataset[:, 1])
-
-# xbot_response = ResponseGenerator(data, train_x, train_y, tokenizer, xbot_trained_model,
-#                                   explainer_object, verbose=False)
 
 
 ##########################
@@ -1303,36 +1277,6 @@ def get_explanation(intent, explanation):
         exp = "Nothing found!"
 
     return exp
-
-
-
-######################################################
-# Version 1 - Bidirectional LSTM and Embedding Model #
-######################################################
-# @app.get("/chat_bot")
-# def chat_bot(user_input: str = ""):
-#
-#     file = open("blackbox_model_files/verbatim_explanation.txt", "rt")
-#     file_contents = file.read()
-#     explanation = file_contents.split("\n\n")
-#
-#     output_response, context, intent = xbot_response.chatbot_response(user_input)
-#
-#     if intent in explanation_intents:
-#         xbot_explanation = get_explanation(intent, explanation)
-#     elif intent == 'greet':
-#         xbot_explanation = random.choice(greet_response)
-#     elif intent == 'goodbye':
-#         xbot_explanation = random.choice(goodbye_response)
-#     elif intent == 'bot_challenge':
-#         xbot_explanation = random.choice(bot_challenge_response)
-#     elif intent == 'options':
-#         xbot_explanation = random.choice(options_response)
-#     else:
-#         xbot_explanation = "Nothing found!"
-#
-#     return {'tag_intent': intent,
-#             'xbot_explanation': xbot_explanation}
 
 
 
