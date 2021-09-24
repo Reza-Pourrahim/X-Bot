@@ -18,8 +18,8 @@ from sklearn.model_selection import train_test_split
 
 # BlackBox TO EXPLAIN
 # blackbox = GradientBoostingClassifier()
-# blackbox = RandomForestClassifier()
-blackbox = SGDClassifier(loss='log')
+blackbox = RandomForestClassifier()
+# blackbox = SGDClassifier(loss='log')
 # blackbox = SVC(probability=True)
 
 
@@ -36,11 +36,11 @@ blackbox = SGDClassifier(loss='log')
 
 
 ## wine
-# dataset_name = 'explainer_dataset/wine.csv'
-# explainer_dataset = prepare_wine_dataset(dataset_name)
-# pkl_explainer_object = 'blackbox_model_files/wine_explainer_object.pkl'
-#
-# pkl_filename = 'blackbox_model_files/wine_RandomForestClassifier.pkl'
+dataset_name = 'explainer_dataset/wine.csv'
+explainer_dataset = prepare_wine_dataset(dataset_name)
+pkl_explainer_object = 'blackbox_model_files/wine_explainer_object.pkl'
+
+pkl_filename = 'blackbox_model_files/wine_RandomForestClassifier.pkl'
 # pkl_filename = 'blackbox_model_files/wine_SGDClassifier.pkl'
 # pkl_filename = 'blackbox_model_files/wine_SVC.pkl'
 # pkl_filename = 'blackbox_model_files/wine_GradientBoostingClassifier.pkl'
@@ -72,12 +72,12 @@ blackbox = SGDClassifier(loss='log')
 
 
 ## compas-scores-two-years: ['High', 'Low', 'Medium']
-dataset_name = 'explainer_dataset/compas-scores-two-years.csv'
-explainer_dataset = prepare_compass_dataset(dataset_name)
-pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
+# dataset_name = 'explainer_dataset/compas-scores-two-years.csv'
+# explainer_dataset = prepare_compass_dataset(dataset_name)
+# pkl_explainer_object = 'blackbox_model_files/compas_explainer_object.pkl'
 
 # pkl_filename = 'blackbox_model_files/compas_RandomForestClassifier.pkl'
-pkl_filename = 'blackbox_model_files/compas_SGDClassifier.pkl'
+# pkl_filename = 'blackbox_model_files/compas_SGDClassifier.pkl'
 # pkl_filename = 'blackbox_model_files/compas_SVC.pkl'
 # pkl_filename = 'blackbox_model_files/compas_GradientBoostingClassifier.pkl'
 

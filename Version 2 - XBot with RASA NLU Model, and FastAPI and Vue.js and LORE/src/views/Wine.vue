@@ -17,45 +17,34 @@
         <br />
         <b-button variant="success" v-b-toggle.sidebar-1>Input Values</b-button>
         <hr />
-        <b-row md="2">
+        <b-row md="3">
+          <b-col></b-col>
           <b-col class="position-relative">
             <b-card
               border-variant="secondary"
-              header="Wine Quality Class: "
-              header-border-variant="secondary"
+              header="The Wine Quality Class is: "
+              bg-variant="primary"
+              text-variant="white"
               align="center"
               v-if="class_wine"
             >
               <b-card-text
                 ><h4>
                   <b-badge variant="dark">{{ class_wine.class_wine }}</b-badge>
-                </h4><br />
+                </h4>
+                <hr />
                 With the Probability of:
                 <br />
                 <h5>
-                  <b-badge variant="dark">{{ class_wine.class_prob }}</b-badge>
+                  <b-badge variant="dark">{{ class_wine.class_prob }}%</b-badge>
                 </h5></b-card-text
               >
             </b-card>
           </b-col>
-          <b-col>
-            <b-card
-              border-variant="secondary"
-              header="X-Bot: "
-              header-border-variant="secondary"
-              align="center"
-              v-if="explanation"
-            >
-              <b-card-text>{{ explanation.xbot_explanation }}</b-card-text>
-              <b-card-text
-                ><strong>Intent:</strong>
-                {{ explanation.tag_intent }}</b-card-text
-              >
-            </b-card>
-          </b-col>
+          <b-col></b-col>
         </b-row>
         <br />
-        <b-sidebar id="sidebar-1" title="wine" backdrop shadow="true">
+        <b-sidebar id="sidebar-1" title="wine" shadow="true">
           <div class="px-3 py-2 text-left">
             <b-form @submit="onSubmit">
               <b-form-group
@@ -292,35 +281,69 @@
       </b-jumbotron>
       <b-row>
         <b-col>
-          <b-form @submit="onSubmit_chat">
-            <b-form-group
-              id="ig-user_input"
-              label="Chat with X-Bot:"
-              label-for="i-user_input"
-              v-show="can_chat"
+          <b-card
+            v-show="can_explain"
+            bg-variant="dark"
+            text-variant="white"
+            title="X-Bot"
+          >
+            <b-card-text>
+              Click on this button to explain the selected instance and start to
+              chat with X-Bot:
+            </b-card-text>
+            <b-button v-on:click="start_to_explain_instance" variant="success"
+              >Start</b-button
             >
-              <b-form-input
-                id="i-user_input"
-                size="lg"
-                placeholder="Ask me your question"
-                v-model="form_chat.user_input"
-                type="text"
-                required
-                v-show="can_chat"
-              ></b-form-input>
-            </b-form-group>
-            <b-button
-              type="submit"
-              variant="primary"
-              :disabled="invalid_chat"
-              v-show="can_chat"
-              >Send</b-button
-            >
-            <b-overlay no-wrap :show="invalid_chat"></b-overlay>
-          </b-form>
+          </b-card>
+          <b-overlay no-wrap :show="invalid_start"></b-overlay>
         </b-col>
       </b-row>
+      <b-card bg-variant="light" border-variant="dark" v-show="can_chat">
+        <b-row md="2">
+          <b-col>
+            <b-form @submit="onSubmit_chat">
+              <b-form-group
+                id="ig-user_input"
+                label="Chat with X-Bot:"
+                label-for="i-user_input"
+              >
+                <b-form-input
+                  id="i-user_input"
+                  size="lg"
+                  placeholder="Ask me your question"
+                  v-model="form_chat.user_input"
+                  type="text"
+                  required
+                ></b-form-input>
+              </b-form-group>
+              <b-button type="submit" variant="primary" :disabled="invalid_chat"
+                >Send</b-button
+              >
+              <b-overlay no-wrap :show="invalid_chat"></b-overlay>
+            </b-form>
+          </b-col>
+          <b-col>
+            <b-card
+              border-variant="secondary"
+              header="X-Bot: "
+              bg-variant="primary"
+              text-variant="white"
+              align="center"
+              v-if="explanation"
+              v-show="can_xbot_respond"
+            >
+              <b-card-text>{{ explanation.xbot_explanation }}</b-card-text>
+              <hr />
+              <b-card-text
+                ><strong>Intent:</strong>
+                {{ explanation.tag_intent }}</b-card-text
+              >
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-card>
     </div>
+    <br />
   </b-container>
 </template>
 
@@ -362,6 +385,9 @@ export default {
         },
         { value: "SVC", text: "Support Vector Machine Classifier" },
       ],
+      can_explain: false,
+      can_xbot_respond: false,
+      invalid_start: false,
       invalid: false,
       invalid_chat: false,
       can_chat: false,
@@ -370,12 +396,23 @@ export default {
     };
   },
   methods: {
+    start_to_explain_instance(event) {
+      event.preventDefault();
+      this.invalid_start = true;
+      getSingleEndpoint(this.form, "wine_lore_explanation").then((res) => {
+        this.result = res.data;
+        this.invalid_start = false;
+        this.can_explain = false;
+        this.can_chat = true;
+      });
+    },
     onSubmit_chat(event) {
       event.preventDefault();
       this.invalid_chat = true;
       getSingleEndpoint(this.form_chat, "chat_bot").then((res) => {
         this.explanation = res.data;
         this.invalid_chat = false;
+        this.can_xbot_respond = true;
       });
     },
     onSubmit(event) {
@@ -384,7 +421,9 @@ export default {
       getSingleEndpoint(this.form, "wine_lore").then((res) => {
         this.class_wine = res.data;
         this.invalid = false;
-        this.can_chat = true;
+        this.can_explain = true;
+        this.can_chat = false;
+        this.can_xbot_respond = false;
       });
     },
   },
