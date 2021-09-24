@@ -60,35 +60,35 @@
       </b-row>
 
       <b-form @submit="onSubmit">
-        <b-row cols="3">
+        <b-row cols="2">
           <b-col>
             <b-form-group
               id="ig-explainer_dataset"
-              label="Dataset:"
+              label="Data:"
               label-for="ig-explainer_dataset"
             >
               <b-form-select
                 id="ig-explainer_dataset"
-                v-model="form.explainer_dataset"
-                :options="explainer_dataset_options"
+                v-model="form.data_to_explain"
+                :options="data_to_explain_options"
                 required
               ></b-form-select>
             </b-form-group>
           </b-col>
-          <b-col>
-            <b-form-group
-              id="ig-explainer_model"
-              label="Explainer:"
-              label-for="ig-explainer_model"
-            >
-              <b-form-select
-                id="ig-explainer_model"
-                v-model="form.explainer_model"
-                :options="explainer_model_options"
-                required
-              ></b-form-select>
-            </b-form-group>
-          </b-col>
+          <!--          <b-col>-->
+          <!--            <b-form-group-->
+          <!--              id="ig-explainer_model"-->
+          <!--              label="Model:"-->
+          <!--              label-for="ig-explainer_model"-->
+          <!--            >-->
+          <!--              <b-form-select-->
+          <!--                id="ig-explainer_model"-->
+          <!--                v-model="form.model_to_explain"-->
+          <!--                :options="model_to_explain_options"-->
+          <!--                required-->
+          <!--              ></b-form-select>-->
+          <!--            </b-form-group>-->
+          <!--          </b-col>-->
           <b-col>
             <br />
             <b-button
@@ -114,10 +114,10 @@ export default {
     return {
       invalid: false,
       form: {
-        explainer_dataset: null,
-        explainer_model: null,
+        data_to_explain: null,
+        // model_to_explain: null,
       },
-      explainer_dataset_options: [
+      data_to_explain_options: [
         { value: null, text: "Please select an option" },
         { value: "adult", text: "Adult Income" },
         { value: "compas", text: "COMPAS" },
@@ -125,23 +125,19 @@ export default {
         { value: "iris", text: "Iris" },
         { value: "wine", text: "Wine" },
       ],
-      explainer_model_options: [
-        { value: null, text: "Please select an option" },
-        { value: "lore", text: "LORE - Local Rule-Based Explanations" },
-        // {
-        //   value: "lime",
-        //   text: "LIME - Local Interpretable Model-Agnostic Explanations (not implemented yet)",
-        // },
-      ],
+      // model_to_explain_options: [
+      //   { value: null, text: "Please select an option" },
+      //   { value: "RandomForestClassifier", text: "Random Forest Classifier" },
+      //   { value: "SGDClassifier", text: "Stochastic Gradient Descent Classifier" },
+      //   { value: "SVC", text: "Support Vector Machine Classifier" },
+      // ],
     };
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
       this.invalid = true;
-      this.$router.push(
-        "/" + this.form.explainer_dataset + "_" + this.form.explainer_model
-      );
+      this.$router.push("/" + this.form.data_to_explain);
     },
   },
 };

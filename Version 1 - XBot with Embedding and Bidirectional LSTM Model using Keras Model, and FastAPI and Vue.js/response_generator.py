@@ -17,7 +17,7 @@ whitelist = ['?', '!']
 
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 # from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Using symspell to correct spelling
 import pkg_resources
