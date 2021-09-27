@@ -1,4 +1,4 @@
-## **X-Bot** : Development of a Model and Data Agnostic Chat Bot for Explaining the Decisions of Black Box Classifiers 
+## **X-Bot** : Development of a Model and Data Agnostic Chatbot for Explaining the Decisions of Black Box Classifiers 
 In this Project:
 - Two Versions of Chatbot Model: 
   - The First Model is a Deep Learning Embedding and Bidirectional LSTM Model using Keras
