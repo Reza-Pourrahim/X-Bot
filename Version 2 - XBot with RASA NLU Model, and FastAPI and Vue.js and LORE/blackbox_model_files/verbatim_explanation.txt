@@ -1,15 +1,15 @@
-r = { age_cat = 25 - 45 } --> { class: Low }
+r = { age > 35.94, is_recid > -0.91, two_year_recid <= 1.09, is_violent_recid <= 0.20 } --> { class: Low }
 
-feature importance = {'age_cat=25 - 45': 1.0}
+feature importance = {'age': 0.3066819637483727, 'is_recid': 0.15008267462313615, 'is_violent_recid': 0.08355738788216331, 'two_year_recid': 0.158512137740799}
 
 c =  }
 
-exemplars = { age = 27, priors_count = 1, days_b_screening_arrest = 1, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 8, age_cat = 25 - 45, sex = Male, race = African-American, c_charge_degree = F }
-{ age = 29, priors_count = 0, days_b_screening_arrest = 1, is_recid = 1, is_violent_recid = 0, two_year_recid = 1, length_of_stay = 6, age_cat = 25 - 45, sex = Male, race = Hispanic, c_charge_degree = F }
-{ age = 30, priors_count = 0, days_b_screening_arrest = 1, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 10, age_cat = 25 - 45, sex = Male, race = Other, c_charge_degree = F }
+exemplars = { age = 37, priors_count = 2, days_b_screening_arrest = 12, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 12, age_cat = 25 - 45, sex = Male, race = Caucasian, c_charge_degree = M }
+{ age = 42, priors_count = 1, days_b_screening_arrest = 12, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 7, age_cat = 25 - 45, sex = Male, race = African-American, c_charge_degree = M }
+{ age = 37, priors_count = 3, days_b_screening_arrest = 14, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 6, age_cat = 25 - 45, sex = Male, race = Caucasian, c_charge_degree = F }
 
-counter-exemplars = { age = 24, priors_count = 1, days_b_screening_arrest = 1, is_recid = 1, is_violent_recid = 1, two_year_recid = 1, length_of_stay = 6, age_cat = Less than 25, sex = Male, race = African-American, c_charge_degree = F }
-{ age = 24, priors_count = 2, days_b_screening_arrest = 1, is_recid = 1, is_violent_recid = 0, two_year_recid = 1, length_of_stay = 10, age_cat = Less than 25, sex = Male, race = Caucasian, c_charge_degree = F }
-{ age = 24, priors_count = 3, days_b_screening_arrest = 1, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 6, age_cat = Less than 25, sex = Male, race = African-American, c_charge_degree = M }
+counter-exemplars = { age = 35, priors_count = 2, days_b_screening_arrest = 14, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 13, age_cat = 25 - 45, sex = Male, race = Hispanic, c_charge_degree = F }
+{ age = 34, priors_count = 2, days_b_screening_arrest = 12, is_recid = 1, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 12, age_cat = 25 - 45, sex = Male, race = African-American, c_charge_degree = F }
+{ age = 33, priors_count = 4, days_b_screening_arrest = 9, is_recid = 0, is_violent_recid = 0, two_year_recid = 0, length_of_stay = 7, age_cat = 25 - 45, sex = Male, race = African-American, c_charge_degree = F }
 
-fidelity = 1.0
+fidelity = 0.9861386129438963

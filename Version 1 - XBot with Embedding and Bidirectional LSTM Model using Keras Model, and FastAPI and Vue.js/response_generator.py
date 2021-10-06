@@ -98,11 +98,12 @@ class ResponseGenerator(object):
 
     # return bag of words array: 0 or 1 for each word in the bag that exists in the user input
     def texts_to_sequences(self, user_input):
-        # correcting spelling of words of user input
-        user_input = self.correct_spellings(user_input)
+
         # tokenize the user input
         user_input_words = self.clean_text(user_input)
-        detokenize_words = self.detokenize(user_input_words)
+        detokenize_words_1 = self.detokenize(user_input_words)
+        # correcting spelling of words of user input
+        detokenize_words = self.correct_spellings(detokenize_words_1)
 
         # Transforms each text in texts to a sequence of integers.
         tokenized_seq = self.tokenizer.texts_to_sequences([detokenize_words])
@@ -160,23 +161,23 @@ class ResponseGenerator(object):
 
         return output_response, context[0], tag_intent
 
-    def get_explanation(self, context, explanation):
-        if context == 'rule':
-            exp = explanation.get('rule')
-        elif context == 'crules':
-            exp = explanation.get('crules')
-        elif context == 'fidelity':
-            exp = explanation.get('fidelity')
-        elif context == 'exemplar':
-            exp = explanation.get('exemplar')
-        elif context == 'cexemplar':
-            exp = explanation.get('cexemplar')
-        elif context == 'feature_importance':
-            exp = explanation.get('feature_importance')
-        else:
-            exp = "Nothing found!"
-
-        return exp
+    # def get_explanation(self, context, explanation):
+    #     if context == 'why':
+    #         exp = explanation.get('rule')
+    #     elif context == 'how_to_be_that':
+    #         exp = explanation.get('how_to_be_that')
+    #     elif context == 'fidelity':
+    #         exp = explanation.get('fidelity')
+    #     elif context == 'exemplar':
+    #         exp = explanation.get('exemplar')
+    #     elif context == 'counter_exemplar':
+    #         exp = explanation.get('cexemplar')
+    #     elif context == 'feature_importance':
+    #         exp = explanation.get('feature_importance')
+    #     else:
+    #         exp = "Nothing found!"
+    #
+    #     return exp
 
     # def start_to_chat(self, x):
     #     explanation = self.explainer_obj.explain_instance(x, samples=1000,

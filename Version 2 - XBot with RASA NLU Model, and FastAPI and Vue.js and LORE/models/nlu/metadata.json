@@ -245,6 +245,6 @@
             "class": "rasa.nlu.classifiers.fallback_classifier.FallbackClassifier"
         }
     ],
-    "trained_at": "20210605-181706",
+    "trained_at": "20211005-233201",
     "rasa_version": "2.7.0"
 }

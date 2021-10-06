@@ -19,7 +19,7 @@ model = XBot_obj.create_model(train_x, train_y, embedding_matrix, vocab_size,
                               embedding_dim=100, lstm_out=15, dropout=0.5)
 
 # compile and fit the model
-mymodel = XBot_obj.compile_fit_model(model, train_x, train_y, epochs=200,
+mymodel = XBot_obj.compile_fit_model(model, train_x, train_y, epochs=100,
                                      batch_size=5,
                                      earlystopping_patience=10,
                                      validation_split=0.0,
