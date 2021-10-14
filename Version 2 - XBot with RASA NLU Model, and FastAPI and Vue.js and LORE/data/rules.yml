@@ -12,7 +12,7 @@ rules:
   - intent: goodbye
   - action: utter_goodbye
 
-- rule: Say 'Sorry, can't understand you.' anytime the user challenges
+- rule: Say 'Yes, I'm X-Bot!' anytime the user challenges
   steps:
   - intent: bot_challenge
   - action: utter_iamabot

@@ -22,7 +22,7 @@ nlu:
   examples: |
     - Good afternoon
     - CU
-    - Good by
+    - Thanks, bye!
     - See you later
     - Good night
     - Bye
