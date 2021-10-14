@@ -71,7 +71,7 @@ with open(pkl_explainer_object_wine, 'rb') as f:
 explanation_intents = ['why', 'performance','how_to_be_that','feature_importance','exemplar','counter_exemplar']
 greet_response = ["Ciao", "Buongiorno", "Hi", "Hello", "Good to see you again", "Hi there, how can I help?"]
 goodbye_response = ["See you!", "Have a nice day", "Bye! Come back again soon."]
-bot_challenge_response = ["Sorry, can't understand you", "Please give me more information", "Not sure I understand"]
+bot_challenge_response = ["Yes, I'm X-Bot!"]
 options_response = ["I can give you an explanation consisting of a decision rule, explaining the factual reasons of the decision, and a set of counterfactuals, suggesting the changes in the instance features that would lead to a different outcome! Furthermore, I can Say you the most important feature, bring to you some exemplars, and some counter exemplar to clarify it more!"]
 
 
