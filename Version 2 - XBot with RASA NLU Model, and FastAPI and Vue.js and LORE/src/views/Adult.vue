@@ -498,10 +498,10 @@ export default {
           text: "Gradient Boosting Classifier",
         },
         { value: "RandomForestClassifier", text: "Random Forest Classifier" },
-        {
-          value: "SGDClassifier",
-          text: "Stochastic Gradient Descent Classifier",
-        },
+        // {
+        //   value: "SGDClassifier",
+        //   text: "Stochastic Gradient Descent Classifier",
+        // },
         { value: "SVC", text: "Support Vector Machine Classifier" },
       ],
       can_explain: false,

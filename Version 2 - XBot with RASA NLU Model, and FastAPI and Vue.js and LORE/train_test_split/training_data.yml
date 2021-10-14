@@ -1,0 +1,148 @@
+version: "2.0"
+nlu:
+- intent: bot_challenge
+  examples: |
+    - Is this a real person I'm speaking with?
+    - Are you a machine?
+    - Am I talking to a human?
+    - Am I talking to a bot?
+    - Are you a real person?
+    - You're a bot, aren't you?
+    - Are you a bot?
+    - Is this a human being I'm speaking with?
+- intent: goodbye
+  examples: |
+    - Bye
+    - See you later
+    - Goodbye
+    - Exit
+    - Good by
+    - Good afternoon
+    - CU
+    - Have a nice day
+- intent: how_to_be_that
+  examples: |
+    - What needs to be changed to change the decision?
+    - What features of the instance should change to provide a different outcome?
+    - counterfactual rule
+    - How should the features change for this instance to get a different prediction?
+    - What changes should be made to this instance to achieve a different prediction?
+    - What must be changed to change the prediction?
+    - What must happen to change the prediction?
+    - How should this instance change to get a different prediction?
+    - What changes in the instance’s features lead to a different outcome?
+    - What are the counterfactual rules?
+    - How should this instance be modified to obtain a different prediction?
+- intent: counter_exemplar
+  examples: |
+    - What are the examples that are similar to this instance but have a different label?
+    - What are the cases with other labels that are similar to this one?
+    - What are the nearest examples classified with a different label?
+    - Show me an instance similar to this instance with different label
+    - What is the nearest neighbor that is not similar to this instance?
+    - Counter exemplar
+    - What are the examples with various labels that are similar to this instance?
+    - What are the closest instances with a different label?
+    - Counter_exemplars
+    - Show me a counter exemplar
+- intent: greet
+  examples: |
+    - Good evening
+    - Hello there
+    - Goodevening
+    - Goodmorning
+    - Good afternoon
+    - Hey
+    - Hi
+    - Hello
+    - Hey there
+    - Let's go
+    - Buongiorno
+- intent: performance
+  examples: |
+    - Is the system's performance good enough?
+    - How accurate are the explanations?
+    - How good is an interpretable model in imitating black box behavior?
+    - How about the performance?
+    - What is the interpretable predictor's accuracy?
+    - Performance
+    - Accuracy
+    - What is the accuracy of the interpretable predictor?
+    - How reliable are the explanations?
+    - How well does the model mimic a black box predictor?
+    - Fidelity
+    - Is the system's performance adequate?
+- intent: feature_importance
+  examples: |
+    - Show me the most important feature.
+    - Show me the most important features for this prediction
+    - How does it weigh different features?
+    - Important variables
+    - What are the most important variables for the system to make this decision?
+    - Give me top feature importance
+    - Important features
+    - What is the feature importance vector for this prediction?
+    - What is the feature importance for this outcome prediction?
+    - Give me the most important feature.
+    - Which features are the most important?
+    - Feature importance
+    - What features of the instance did the system consider to make this decision?
+    - Is feature X used or not used for the predictions?
+- intent: exemplar
+  examples: |
+    - Exemplar
+    - What are the other examples that have the same label as this one?
+    - Is there an exemplar?
+    - What are some additional instances with the same label?
+    - Similar instances
+    - What are other examples with similar label?
+    - What more examples are there that are similar to this one?
+    - What are the other instances with the same label as this instance?
+    - Give me an example instance similar to this instance
+    - Show me another instance similar to this instance with the same label
+    - What are the instances similar to this instance with the same outcome prediction?
+    - Show me an exemplar
+    - What are some other instances with the same label?
+    - Show me some other instances similar to this instance with the same outcome
+- intent: options
+  examples: |
+    - How can you assist?
+    - What kind of assistance is available?
+    - Please tell me how you can help me.
+    - What kind of help is available?
+    - How you can be helpful?
+    - What options do you have?
+    - What support is provided?
+    - How can you help me?
+    - What kind of help do you offer?
+    - What support is offered?
+    - What can you do?
+    - What services do you provide?
+    - What help do you provide?
+    - What are your options?
+- intent: why
+  examples: |
+    - What are the reasons behind this decision?
+    - Factual rule
+    - Can you explain the reasons for this decision?
+    - What are the grounds behind this decision?
+    - What are the reasons behind the black box decision?
+    - What are the reasons?
+    - Explanation
+    - Can you explain the reasons?
+    - Why does the system predict this class for this instance?
+    - Could you please explain why you made this decision?
+    - Why is this class predicted by the system for this instance?
+    - Can you explain why?
+    - Why?
+    - What features of this instance leads to the system's prediction?
+    - Reasons
+    - Explain it to me
+    - How did the system make this prediction?
+    - Explain to me
+    - Why did the system make this prediction?
+    - Explain
+    - Could you please explain why?
+    - What rules does it use?
+    - Could you explain why?
+    - How was this calculated?

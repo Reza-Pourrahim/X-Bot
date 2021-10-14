@@ -1,0 +1,138 @@
+[
+  {
+    "text": "Have a nice day",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "options",
+      "confidence": 0.9710056185722351
+    }
+  },
+  {
+    "text": "Exit",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "why",
+      "confidence": 0.8070858120918274
+    }
+  },
+  {
+    "text": "Factual rule",
+    "intent": "why",
+    "intent_prediction": {
+      "name": "how_to_be_that",
+      "confidence": 0.9992896318435669
+    }
+  },
+  {
+    "text": "Fidelity",
+    "intent": "performance",
+    "intent_prediction": {
+      "name": "greet",
+      "confidence": 0.7368131279945374
+    }
+  },
+  {
+    "text": "Similar instances",
+    "intent": "exemplar",
+    "intent_prediction": {
+      "name": "counter_exemplar",
+      "confidence": 0.9996123313903809
+    }
+  },
+  {
+    "text": "CU",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "greet",
+      "confidence": 0.9348773956298828
+    }
+  },
+  {
+    "text": "What rules does it use?",
+    "intent": "why",
+    "intent_prediction": {
+      "name": "feature_importance",
+      "confidence": 0.9560409784317017
+    }
+  },
+  {
+    "text": "What are the cases with other labels that are similar to this one?",
+    "intent": "counter_exemplar",
+    "intent_prediction": {
+      "name": "exemplar",
+      "confidence": 0.9997952580451965
+    }
+  },
+  {
+    "text": "What are the examples with various labels that are similar to this instance?",
+    "intent": "counter_exemplar",
+    "intent_prediction": {
+      "name": "exemplar",
+      "confidence": 0.9990140795707703
+    }
+  },
+  {
+    "text": "Let's go",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "goodbye",
+      "confidence": 0.5290839076042175
+    }
+  },
+  {
+    "text": "Good afternoon",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "goodbye",
+      "confidence": 0.744897186756134
+    }
+  },
+  {
+    "text": "Moin",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "why",
+      "confidence": 0.7161903977394104
+    }
+  },
+  {
+    "text": "What features of the instance did the system consider to make this decision?",
+    "intent": "feature_importance",
+    "intent_prediction": {
+      "name": "why",
+      "confidence": 0.9996731281280518
+    }
+  },
+  {
+    "text": "What features of this instance leads to the system's prediction?",
+    "intent": "why",
+    "intent_prediction": {
+      "name": "how_to_be_that",
+      "confidence": 0.9254246354103088
+    }
+  },
+  {
+    "text": "counter factual",
+    "intent": "how_to_be_that",
+    "intent_prediction": {
+      "name": "counter_exemplar",
+      "confidence": 0.9317156672477722
+    }
+  },
+  {
+    "text": "How does it weigh different features?",
+    "intent": "feature_importance",
+    "intent_prediction": {
+      "name": "counter_exemplar",
+      "confidence": 0.8137120008468628
+    }
+  },
+  {
+    "text": "Not similar instances",
+    "intent": "counter_exemplar",
+    "intent_prediction": {
+      "name": "exemplar",
+      "confidence": 0.9998323917388916
+    }
+  }
+]

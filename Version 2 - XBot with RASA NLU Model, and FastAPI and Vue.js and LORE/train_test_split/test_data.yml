@@ -1,0 +1,54 @@
+version: "2.0"
+nlu:
+- intent: bot_challenge
+  examples: |
+    - Are you a human?
+    - Is this a bot I'm speaking with?
+- intent: goodbye
+  examples: |
+    - See you around
+    - Bye bye
+    - Good night
+- intent: how_to_be_that
+  examples: |
+    - counter factual
+    - What must happen to change the outcome?
+- intent: counter_exemplar
+  examples: |
+    - Not similar instances
+    - Is there a counter exemplar?
+    - What are the instances that are similar to this instance with different label?
+- intent: greet
+  examples: |
+    - Hey dude
+    - Moin
+    - Good morning
+- intent: performance
+  examples: |
+    - What is the accuracy of the interpretable predictor with respect to predictions of the black box?
+    - How precise are the explanations?
+    - To which extent the model can accurately imitate a black box predictor?
+- intent: feature_importance
+  examples: |
+    - Top features
+    - Does feature x influence prediction?
+    - Which are the most important variables?
+- intent: exemplar
+  examples: |
+    - What other cases are similar to this one?
+    - What are the examples classified by the black box with the same label as this instance?
+    - Some exemplars
+- intent: options
+  examples: |
+    - What do you have to offer?
+    - What can you do to assist me?
+    - Help
+    - What can you do to help?
+- intent: why
+  examples: |
+    - Can you explain why you made this decision?
+    - Why does the system give this outcome prediction?
+    - Can you provide the reasons for this prediction?
+    - Give me the explanation
+    - Why is this so?
+    - How does the system make this prediction?
